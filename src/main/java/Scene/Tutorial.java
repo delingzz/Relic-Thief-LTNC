@@ -18,6 +18,7 @@ public class Tutorial {
     public Tutorial(Stage stage) {
         this.stage = stage;
     }
+    // phần này hoàn thiện sau!!
     public void Show() {
         Pane TutorialPane = new Pane();
 

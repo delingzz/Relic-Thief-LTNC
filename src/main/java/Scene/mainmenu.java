@@ -67,7 +67,6 @@ public class mainmenu {
          HoverEffect.addHoverEffect(TTImgV);
 
          TTImgV.setOnMouseClicked(e-> {
-             System.out.println("Clicked Tutorial");
              Tutorial tutorial = new Tutorial(stage);
              tutorial.Show();
          });
