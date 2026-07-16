@@ -29,6 +29,14 @@ public class Player extends Entity{
         ManaCost();
     }
 
+    //lấy tọa độ X và Y;
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+
     //chính sửa tốc độ
     public void SpeedUp(double speed) {
         this.speed = speed;
@@ -59,20 +67,17 @@ public class Player extends Entity{
             manaTimer += 0.0167;
             if(manaTimer > space ) {
                 mana -= manacons;
-
                 if(mana <=0) {
                     mana = 0;
                 }
-
                 manaTimer = 0;
             }
         }
-
         if(mana <=0) {
             ismanaconsume = false;
         }
     }
-
+    // cơ chế hồi mana
     public void HealMana() {
         if(mana < maxmana && !ismanaconsume) {
             timeheal += 0.25;

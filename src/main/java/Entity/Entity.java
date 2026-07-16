@@ -2,6 +2,7 @@ package Entity;
 
 import javafx.scene.image.ImageView;
 
+
 public abstract class Entity {
     protected int hp;
     protected double x,y;
