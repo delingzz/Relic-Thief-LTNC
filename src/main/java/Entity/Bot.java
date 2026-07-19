@@ -3,7 +3,7 @@ package Entity;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
-public class Bot extends Entity{
+public class Bot extends Entity {
 
     //set tầm nhìn cho bot
     private double visible = 200;
@@ -13,33 +13,37 @@ public class Bot extends Entity{
     private double timetoattack = 1.5;
     private double maxdistance = 100;
     private double k = 0.5;//set tạm thế
+    private int PatrolTimer = 0;
+    private double Sx, Sy; // tọa độ spawn của bot
 
-    private boolean canseeplayer = false;
-    private double Sx,Sy; // tọa độ spawn của bot
+    private double targetX;
+    private double targetY;
+    private boolean hastarget = false;
 
     public Bot() {
-        super(2000,3.5);
+        super(2000, 3.5);
     }
+
     public void setvisible(int visible) {
         this.visible = visible;
     }
+
     public void attack(Player player) {
         attacktimer += 0.0167;
-        if(attacktimer >= timetoattack) {
+        if (attacktimer >= timetoattack) {
             player.TakeDame(this.damage);
             attacktimer = 0;
         }
     }
-    public void update() {
 
-    }
     // hàm này sủa logic sau
     public boolean iswall(double next, double location) {
-        if(location == next) {
+        if (location == next) {
             return true;
         }
         return false;
     }
+
     //hàm di chuyển cho bot
     public void move(double X, double Y) {
         double deltaX = X - x;
@@ -49,8 +53,8 @@ public class Bot extends Entity{
 
         if (distance <= 0) return;
 
-        double nextX = x + (deltaX/distance) * speed;
-        double nextY = y + (deltaY/distance) * speed;
+        double nextX = x + (deltaX / distance) * speed;
+        double nextY = y + (deltaY / distance) * speed;
 
         if (!iswall(nextX, y)) {
             x = nextX;
@@ -59,14 +63,51 @@ public class Bot extends Entity{
             y = nextY;
         }
     }
+
     //hàm đuổi theo người chơi
-    public void catchplayer(double Px,double Py) {
-        move(Px,Py);
+    public void catchplayer(double Px, double Py) {
+        move(Px, Py);
     }
+
     //hàm quay về điểm spawn
-    public void returntospawn() {
-        move(Sx,Sy);
+    public void returntospawnpoint() {
+        move(Sx, Sy);
     }
+
     public void patrol() {
+        if (PatrolTimer > 0) {
+            PatrolTimer--;
+        }
+        if (PatrolTimer == 0) {
+            if (hastarget == false) {
+                targetX = (int) (Math.random() * 100) + (Sx - 50);
+                targetY = (int) (Math.random() * 100) + (Sy - 50);
+                hastarget = true;
+            }
+            if (hastarget == true) {
+                move(targetX, targetY);
+                if (abs(x - targetX) < 3.5 && abs(y - targetY) < 3.5) {
+                    PatrolTimer = 120;
+                    hastarget = false;
+                }
+            }
+        }
+    }
+    public void update(Player player) {
+        double distance = Math.sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
+        double disspawn = Math.sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
+        if(distance <= visible) {
+            catchplayer(player.getX(), player.getY());
+            return;
+        }
+        if(distance <= attackspace) {
+            attack(player);
+            return;
+        }
+
+        if(disspawn >= maxdistance) {
+            returntospawnpoint();
+        }
+        patrol();
     }
 }

@@ -1,8 +1,8 @@
 package Scene;
 
+import Event.HoverEffect;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import Logic.Manager;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,6 +11,7 @@ import java.io.File;
 
 import static Application.RelicThief.SCREENHEIGHT;
 import static Application.RelicThief.SCREENWIDTH;
+import Event.HoverEffect;
 
 public class Tutorial {
 

@@ -13,5 +13,4 @@ public abstract class Entity {
         this.hp = hp;
         this.speed = speed;
     }
-    public abstract void update();
 }

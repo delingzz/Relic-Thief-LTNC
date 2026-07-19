@@ -1,8 +1,10 @@
 package Entity;
 
-public class Player extends Entity{
+import Event.input;
 
-    private double mana =2000;
+public class Player extends Entity {
+
+    private double mana = 2000;
     private double maxmana = 2000;
     private double oldspeed;
     private int maxhp;
@@ -19,20 +21,23 @@ public class Player extends Entity{
 
 
     public Player() {
-        super(100,4.0);
-        this.maxhp =100;
+        super(100, 4.0);
+        this.maxhp = 100;
         this.oldspeed = speed;
     }
-    @Override
+
     public void update() {
-        HealMana();
-        ManaCost();
+        move();
+        healmana();
+        manacost();
+
     }
 
     //lấy tọa độ X và Y;
     public double getX() {
         return x;
     }
+
     public double getY() {
         return y;
     }
@@ -41,6 +46,7 @@ public class Player extends Entity{
     public void SpeedUp(double speed) {
         this.speed = speed;
     }
+
     public void ResetSpeed() {
         this.speed = oldspeed;
     }
@@ -48,46 +54,71 @@ public class Player extends Entity{
     //cơ chế trừ máu
     public void TakeDame(double damage) {
         this.hp -= damage;
-        if(this.hp <=0 ) {
-            this.hp =0;
+        if (this.hp <= 0) {
+            this.hp = 0;
         }
     }
 
     //cơ chế cộng máu
     public void heal(int healHP) {
         this.hp += healHP;
-        if(this.hp >= maxhp) {
+        if (this.hp >= maxhp) {
             this.hp = maxhp;
         }
     }
 
     //cơ chế trừ mana
-    public void ManaCost() {
-        if(ismanaconsume && mana >0) {
+    public void manacost() {
+        if (ismanaconsume && mana > 0) {
             manaTimer += 0.0167;
-            if(manaTimer > space ) {
+            if (manaTimer > space) {
                 mana -= manacons;
-                if(mana <=0) {
+                if (mana <= 0) {
                     mana = 0;
                 }
                 manaTimer = 0;
             }
         }
-        if(mana <=0) {
+        if (mana <= 0) {
             ismanaconsume = false;
         }
     }
+
     // cơ chế hồi mana
-    public void HealMana() {
-        if(mana < maxmana && !ismanaconsume) {
+    public void healmana() {
+        if (mana < maxmana && !ismanaconsume) {
             timeheal += 0.25;
-            if(timeheal == timetoheal) {
+            if (timeheal == timetoheal) {
                 timeheal = 0;
                 mana += manacons;
-                if(mana >= maxmana) {
+                if (mana >= maxmana) {
                     mana = 2000;
                 }
             }
+        }
+    }
+
+    public void move() {
+        double dx = 0;
+        double dy = 0;
+        if (input.up) {
+            dy -= 1;
+        }
+        if (input.down) {
+            dy -= 1;
+        }
+        if (input.right) {
+            dx += 1;
+        }
+        if (input.left) {
+            dx -= 1;
+        }
+        double length = (dx * dx + dy * dy);
+        if (length > 0) {
+            dx /= length;
+            dy /= length;
+            x += dx * speed;
+            y += dy * speed;
         }
     }
 }

@@ -1,17 +1,16 @@
 package Scene;
 
+import Event.HoverEffect;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import Scene.Tutorial;
-
-import java.io.File;
 import java.util.Objects;
 
 import static Application.RelicThief.*;
+import Event.HoverEffect;
 
 public class mainmenu {
      private Stage stage;

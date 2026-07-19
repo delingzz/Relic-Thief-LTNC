@@ -1,8 +1,4 @@
-package Scene;
-
-import javafx.animation.ScaleTransition;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
+package Event;
 
 import javafx.animation.ScaleTransition;
 import javafx.scene.image.ImageView;
