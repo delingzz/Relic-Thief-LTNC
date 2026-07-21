@@ -1,12 +1,13 @@
 package Entity;
 
 import Event.input;
+import static java.lang.Math.sqrt;
 
 public class Player extends Entity {
-
+    private double deltatime = 1.0/60;
     private double mana = 2000;
     private double maxmana = 2000;
-    private double oldspeed;
+    private double oldspeed ;
     private int maxhp;
 
     //set up cho tiêu hao Mana;
@@ -24,6 +25,8 @@ public class Player extends Entity {
         super(100, 4.0);
         this.maxhp = 100;
         this.oldspeed = speed;
+        this.mana = mana;
+        this.maxmana = maxmana;
     }
 
     public void update() {
@@ -52,7 +55,7 @@ public class Player extends Entity {
     }
 
     //cơ chế trừ máu
-    public void TakeDame(double damage) {
+    public void takedame(double damage) {
         this.hp -= damage;
         if (this.hp <= 0) {
             this.hp = 0;
@@ -70,7 +73,7 @@ public class Player extends Entity {
     //cơ chế trừ mana
     public void manacost() {
         if (ismanaconsume && mana > 0) {
-            manaTimer += 0.0167;
+            manaTimer += deltatime;
             if (manaTimer > space) {
                 mana -= manacons;
                 if (mana <= 0) {
@@ -105,7 +108,7 @@ public class Player extends Entity {
             dy -= 1;
         }
         if (input.down) {
-            dy -= 1;
+            dy += 1;
         }
         if (input.right) {
             dx += 1;
@@ -113,7 +116,7 @@ public class Player extends Entity {
         if (input.left) {
             dx -= 1;
         }
-        double length = (dx * dx + dy * dy);
+        double length = sqrt(dx * dx + dy * dy);
         if (length > 0) {
             dx /= length;
             dy /= length;

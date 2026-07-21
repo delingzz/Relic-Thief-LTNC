@@ -1,7 +1,6 @@
 package Entity;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
 
 public class Bot extends Entity {
 
@@ -16,6 +15,8 @@ public class Bot extends Entity {
     private int PatrolTimer = 0;
     private double Sx, Sy; // tọa độ spawn của bot
 
+    public double stuntimer;
+
     private double targetX;
     private double targetY;
     private boolean hastarget = false;
@@ -24,6 +25,12 @@ public class Bot extends Entity {
         super(2000, 3.5);
     }
 
+    public double getX() {
+        return this.x;
+    }
+    public double getY() {
+        return this.y;
+    }
     public void setvisible(int visible) {
         this.visible = visible;
     }
@@ -31,11 +38,14 @@ public class Bot extends Entity {
     public void attack(Player player) {
         attacktimer += 0.0167;
         if (attacktimer >= timetoattack) {
-            player.TakeDame(this.damage);
+            player.takedame(this.damage);
             attacktimer = 0;
         }
     }
-
+    public void stun(double time) {
+        speed = 0;
+        stuntimer = time;
+    }
     // hàm này sủa logic sau
     public boolean iswall(double next, double location) {
         if (location == next) {
@@ -80,8 +90,8 @@ public class Bot extends Entity {
         }
         if (PatrolTimer == 0) {
             if (hastarget == false) {
-                targetX = (int) (Math.random() * 100) + (Sx - 50);
-                targetY = (int) (Math.random() * 100) + (Sy - 50);
+                targetX = (int) (Math.random() * 72) + (Sx - 36);
+                targetY = (int) (Math.random() * 72) + (Sy - 36);
                 hastarget = true;
             }
             if (hastarget == true) {

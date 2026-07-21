@@ -8,7 +8,8 @@ public abstract class Entity {
     protected double x,y;
     protected double speed;
     protected ImageView sprite;
-
+    public abstract double getX();
+    public abstract double getY();
     public Entity(int hp, double speed) {
         this.hp = hp;
         this.speed = speed;
