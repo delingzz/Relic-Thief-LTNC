@@ -15,4 +15,7 @@ public class Food extends Item{
     public void use(Player player) {
         player.heal(67);
     }
+    public void clear() {
+
+    }
 }

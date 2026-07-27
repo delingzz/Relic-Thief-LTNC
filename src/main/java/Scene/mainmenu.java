@@ -65,11 +65,6 @@ public class mainmenu {
          TTImgV.setLayoutY(630); // tọa độ Y của đầu nút
          HoverEffect.addHoverEffect(TTImgV);
 
-         TTImgV.setOnMouseClicked(e-> {
-             Tutorial tutorial = new Tutorial(stage);
-             tutorial.Show();
-         });
-
          menup.getChildren().addAll(StartImgV,OptImgV,TTImgV);
          Scene scene = new Scene(menup, SCREENWIDTH, SCREENHEIGHT);
          stage.setScene(scene);

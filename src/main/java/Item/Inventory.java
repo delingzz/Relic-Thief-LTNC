@@ -68,6 +68,14 @@ public class Inventory {
         double dy = item.getY() - player.getY();
         if(dx * dx + dy * dy <= size * size) {
             add(item);
+            if(item instanceof Key) {
+                Key key = (Key) item;
+                key.sethavekey(true);
+            }
+            if(item instanceof Relic) {
+                Relic relic = (Relic) item;
+                relic.sethaverelic(true);
+            }
             return true;
         }
         return false;
