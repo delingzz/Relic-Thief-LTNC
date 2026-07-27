@@ -1,11 +1,11 @@
 package Event;
 
 import javafx.animation.ScaleTransition;
-import javafx.scene.image.ImageView;
+import javafx.scene.Node;
 import javafx.util.Duration;
 
 public class HoverEffect {
-    public static void addHoverEffect(ImageView btn) {
+    public static void addHoverEffect(Node btn) {
         btn.setOnMouseEntered(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(150), btn);
             st.setToX(1.1);

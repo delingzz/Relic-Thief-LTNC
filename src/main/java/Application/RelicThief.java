@@ -19,7 +19,7 @@ public class RelicThief extends Application {
     public static final int SCREENWIDTH = 1080;
     public static final int SCREENHEIGHT =720;
     public static final int BUTTONWIDTH = 270;
-    public static final int BUTTONHEIGHT = 200;
+    public static final int BUTTONHEIGHT = 100;
 
     @Override
     public void start(Stage stage) throws IOException {

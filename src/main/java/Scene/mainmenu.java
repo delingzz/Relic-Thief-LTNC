@@ -2,78 +2,103 @@ package Scene;
 
 import Event.HoverEffect;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.Objects;
 
 import static Application.RelicThief.*;
-import Event.HoverEffect;
 
 public class mainmenu {
-     private Stage stage;
+    private static Font limelightFont;
+    private static Font playwriteFont;
 
-     public mainmenu(Stage stage) {
-         this.stage = stage;
-     }
+    private final Stage stage;
 
-     public void show() {
+    public mainmenu(Stage stage) {
+        this.stage = stage;
+    }
 
-         Pane menup = new Pane();
+    public void show() {
+        if (limelightFont == null) {
+            limelightFont = Font.loadFont(
+                    Objects.requireNonNull(getClass().getResourceAsStream("/font/Limelight-Regular.ttf")),
+                    96
+            );
+            playwriteFont = Font.loadFont(
+                    Objects.requireNonNull(getClass().getResourceAsStream("/font/PlaywriteIN-Regular.ttf")),
+                    28
+            );
+        }
 
-         //set nút start game
-         Image StartImg = new Image(
-                 Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
-                 ).toExternalForm()
-         );
-         ImageView StartImgV = new ImageView(StartImg);
-         StartImgV.setFitHeight(BUTTONHEIGHT); // set chieu cao
-         StartImgV.setFitWidth(BUTTONWIDTH); // set chiều rong
-         StartImgV.setPickOnBounds(false);
-         StartImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
-         StartImgV.setLayoutY(230); // tọa độ Y của đầu nút
-         HoverEffect.addHoverEffect(StartImgV);
+        Pane menup = new Pane();
 
-         //set nút option
-         Image OptImg = new Image(
-                 Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
-                 ).toExternalForm()
-         );
-         ImageView OptImgV = new ImageView(OptImg);
-         OptImgV.setFitHeight(BUTTONHEIGHT); // set chieu cao
-         OptImgV.setFitWidth(BUTTONWIDTH); // set chiều rong
-         OptImgV.setPickOnBounds(false);
-         OptImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
-         OptImgV.setLayoutY(430); // tọa độ Y của đầu nút
-         HoverEffect.addHoverEffect(OptImgV);
+        Image bgImage = new Image(
+                Objects.requireNonNull(
+                        getClass().getResource("/image/background/brick-bg.jpg")
+                ).toExternalForm()
+        );
+        menup.setBackground(new Background(new BackgroundImage(
+                bgImage,
+                BackgroundRepeat.REPEAT,
+                BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        )));
 
-         //set nút tutorial
-         Image TutorialImg = new Image(
-                 Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
-                 ).toExternalForm()
-         );
-         ImageView TTImgV = new ImageView(TutorialImg);
-         TTImgV.setFitHeight(BUTTONHEIGHT); // set chieu cao
-         TTImgV.setFitWidth(BUTTONWIDTH); // set chiều rong
-         TTImgV.setPickOnBounds(false);
-         TTImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
-         TTImgV.setLayoutY(630); // tọa độ Y của đầu nút
-         HoverEffect.addHoverEffect(TTImgV);
+        Label title = new Label("Relic Thief");
+        title.setFont(limelightFont);
+        title.setStyle(
+                "-fx-text-fill: #f5d742;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 8, 0.5, 2, 2);"
+        );
+        title.applyCss();
+        title.layout();
+        title.setLayoutX((SCREENWIDTH - title.prefWidth(-1)) / 2);
+        title.setLayoutY(60);
 
-         TTImgV.setOnMouseClicked(e-> {
-             Tutorial tutorial = new Tutorial(stage);
-             tutorial.Show();
-         });
+        Button startBtn = createMenuButton("Start Game");
+        startBtn.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
+        startBtn.setLayoutY(280);
 
-         menup.getChildren().addAll(StartImgV,OptImgV,TTImgV);
-         Scene scene = new Scene(menup, SCREENWIDTH, SCREENHEIGHT);
-         stage.setScene(scene);
-     }
+        Button optionsBtn = createMenuButton("Options");
+        optionsBtn.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
+        optionsBtn.setLayoutY(430);
 
+        Button tutorialBtn = createMenuButton("Tutorial");
+        tutorialBtn.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
+        tutorialBtn.setLayoutY(580);
+        tutorialBtn.setOnAction(e -> {
+            Tutorial tutorial = new Tutorial(stage);
+            tutorial.Show();
+        });
+
+        menup.getChildren().addAll(title, startBtn, optionsBtn, tutorialBtn);
+        stage.setScene(new Scene(menup, SCREENWIDTH, SCREENHEIGHT));
+    }
+
+    private Button createMenuButton(String text) {
+        Button button = new Button(text);
+        button.setFont(playwriteFont);
+        button.setPrefSize(BUTTONWIDTH, BUTTONHEIGHT);
+        button.setStyle(
+                "-fx-background-color: rgba(139, 69, 19, 0.85);" +
+                "-fx-text-fill: white;" +
+                "-fx-background-radius: 12;" +
+                "-fx-border-color: #5c3317;" +
+                "-fx-border-width: 3;" +
+                "-fx-border-radius: 12;"
+        );
+        HoverEffect.addHoverEffect(button);
+        return button;
+    }
 }
-
