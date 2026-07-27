@@ -3,13 +3,18 @@ package Item;
 import Entity.Entity;
 import Entity.Player;
 import Entity.Bot;
+import Event.input;
+import Scene.TileMap;
+
 import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 public class Bom extends Item {
     private double Bx, By;
     private double R = 108;
     private double bomdame = 200000000;
     private boolean isbom = false;
+    private double blastradius = 100;
     public Bom() {
         super(50);
     }
@@ -27,17 +32,41 @@ public class Bom extends Item {
     public void dame(Entity entity) {
         double deltaX = Bx - entity.getX();
         double deltaY = By - entity.getY();
-        if(Math.sqrt(deltaX*deltaX + deltaY*deltaY) <= R) {
-            if(entity instanceof Player) {
-                Player player = (Player) entity;
+        if(sqrt(deltaX*deltaX + deltaY*deltaY) <= R) {
+            if(entity instanceof Player player) {
                 player.takedame(bomdame);
             }
-            if(entity instanceof Bot) {
-                Bot bot = (Bot) entity;
-                bot.stun(5);
+            if(entity instanceof Bot bot) {
+                bot.setstun(true);
             }
         }
     }
-    public void destroy() {}
+    public void destroy(TileMap map) {
+        for(double col= Bx-2;col <= Bx +2;col += 1) {
+            for(double  row = By -2;row<= By +2; row +=1) {
+                double centreX = col * map.tileSize + map.tileSize/2;
+                double centreY = row * map.tileSize + map.tileSize/2;
 
+                double dx = Bx - centreX;
+                double dy = By - centreY;
+                if(Math.sqrt(dx*dx + dy*dy) <= blastradius) {
+                    if(map.getTile((int)col,(int)row)==2) {
+                        map.setTile((int)col,(int)row,0);
+                    }
+                }
+            }
+        }
+
+    }
+    public void randomspawn(TileMap map) {
+        
+    }
+    public void update(Player player,Entity entity, TileMap map) {
+        if(input.enter) {
+            plant(player);
+            input.enter = false;
+        }
+        dame(entity);
+        destroy(map);
+    }
 }

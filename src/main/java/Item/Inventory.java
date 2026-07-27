@@ -62,23 +62,12 @@ public class Inventory {
             }
         }
     }
-    //hàm check loot đồ
-    public boolean loot(Item item, Player player) {
-        double dx = item.getX() - player.getX();
-        double dy = item.getY() - player.getY();
-        if(dx * dx + dy * dy <= size * size) {
-            add(item);
-            if(item instanceof Key) {
-                Key key = (Key) item;
-                key.sethavekey(true);
-            }
-            if(item instanceof Relic) {
-                Relic relic = (Relic) item;
-                relic.sethaverelic(true);
-            }
-            return true;
-        }
-        return false;
+    public void clear() {
+        bomcount = 0;
+        speedcount =0;
+        foodcount =0;
+        inventory.clear();
+        hotbar.clear();
     }
     public ArrayList<Item> getItems() {
         return inventory;

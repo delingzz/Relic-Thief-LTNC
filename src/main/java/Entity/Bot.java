@@ -1,5 +1,7 @@
 package Entity;
 
+import Scene.TileMap;
+
 import static java.lang.Math.abs;
 
 public class Bot extends Entity {
@@ -14,17 +16,23 @@ public class Bot extends Entity {
     private double k = 0.5;//set tạm thế
     private int PatrolTimer = 0;
     private double Sx, Sy; // tọa độ spawn của bot
+    private double deltatime = 0.0167;
+    public double stuntimer = 5.0;
+    private boolean isStun = false;
+    private double oldspeed = speed;
 
-    public double stuntimer;
+    private TileMap map;
 
     private double targetX;
     private double targetY;
     private boolean hastarget = false;
 
-    public Bot() {
+    public Bot(double Sx,double Sy,TileMap map) {
         super(2000, 3.5);
+        this.Sx = Sx;
+        this.Sy = Sy;
+        this.map= map;
     }
-
     public double getX() {
         return this.x;
     }
@@ -36,26 +44,19 @@ public class Bot extends Entity {
     }
 
     public void attack(Player player) {
-        attacktimer += 0.0167;
+        attacktimer += deltatime;
         if (attacktimer >= timetoattack) {
             player.takedame(this.damage);
             attacktimer = 0;
         }
     }
-    public void stun(double time) {
+    public void stun() {
         speed = 0;
-        stuntimer = time;
     }
     // hàm này sủa logic sau
-    public boolean iswall(double next, double location) {
-        if (location == next) {
-            return true;
-        }
-        return false;
-    }
 
     //hàm di chuyển cho bot
-    public void move(double X, double Y) {
+    public void move(double X, double Y, TileMap map) {
         double deltaX = X - x;
         double deltaY = Y - y;
 
@@ -66,22 +67,22 @@ public class Bot extends Entity {
         double nextX = x + (deltaX / distance) * speed;
         double nextY = y + (deltaY / distance) * speed;
 
-        if (!iswall(nextX, y)) {
+        if (!map.isWall(nextX, y)) {
             x = nextX;
         }
-        if (!iswall(x, nextY)) {
+        if (!map.isWall(x, nextY)) {
             y = nextY;
         }
     }
 
     //hàm đuổi theo người chơi
     public void catchplayer(double Px, double Py) {
-        move(Px, Py);
+        move(Px, Py,map);
     }
 
     //hàm quay về điểm spawn
     public void returntospawnpoint() {
-        move(Sx, Sy);
+        move(Sx, Sy,map);
     }
 
     public void patrol() {
@@ -95,7 +96,7 @@ public class Bot extends Entity {
                 hastarget = true;
             }
             if (hastarget == true) {
-                move(targetX, targetY);
+                move(targetX, targetY,map);
                 if (abs(x - targetX) < 3.5 && abs(y - targetY) < 3.5) {
                     PatrolTimer = 120;
                     hastarget = false;
@@ -103,18 +104,29 @@ public class Bot extends Entity {
             }
         }
     }
+    public void setstun(boolean stun) {
+        this.isStun = stun;
+    }
     public void update(Player player) {
         double distance = Math.sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
         double disspawn = Math.sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
-        if(distance <= visible) {
-            catchplayer(player.getX(), player.getY());
+        if(isStun==true) {
+            stuntimer -= deltatime;
+            stun();
+            if(stuntimer <=0) {
+                isStun = false;
+                speed = oldspeed;
+            }
             return;
         }
         if(distance <= attackspace) {
             attack(player);
             return;
         }
-
+        if(distance <= visible) {
+            catchplayer(player.getX(), player.getY());
+            return;
+        }
         if(disspawn >= maxdistance) {
             returntospawnpoint();
         }

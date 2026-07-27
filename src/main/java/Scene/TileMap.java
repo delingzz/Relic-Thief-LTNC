@@ -5,8 +5,8 @@ import javafx.scene.image.Image;
 
 public class TileMap {
 
-    private final int[][] mapData;
-    private final int tileSize;
+    private int[][] map;
+    public static final int tileSize = 36;
 
     // Các ảnh tile
     private final Image wall;
@@ -16,11 +16,11 @@ public class TileMap {
     private final Image diamond;
     private final Image food;
 
-    public TileMap(int tileSize, int[][] mapData) {
-
-        this.tileSize = tileSize;
-        this.mapData = mapData;
-
+    public TileMap(int[][] original) {
+        map = new int[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            map[i] = original[i].clone();
+        }
         wall = new Image(getClass().getResource("/image/wall.png").toExternalForm());
         dirt = new Image(getClass().getResource("/image/dirt.png").toExternalForm());
         breakWall = new Image(getClass().getResource("/image/breakWall.png").toExternalForm());
@@ -28,14 +28,34 @@ public class TileMap {
         diamond = new Image(getClass().getResource("/image/diamond.png").toExternalForm());
         food = new Image(getClass().getResource("/image/food.png").toExternalForm());
     }
+    public int getTile(int row, int col) {
+        return map[row][col];
+    }
 
+    public void setTile(int row, int col, int value) {
+        map[row][col] = value;
+    }
+
+    public int[][] getMap() {
+        return map;
+    }
+    public boolean isWall(double x, double y) {
+
+        int col = (int)(x / tileSize);
+        int row = (int)(y / tileSize);
+        if (row < 0 || row >= map.length ||
+                col < 0 || col >= map[0].length) {
+            return true; // set ngoài map là tường luôn để không đi được
+        }
+        return map[row][col] == 1;
+    }
     public void draw(GraphicsContext gc) {
 
-        for (int row = 0; row < mapData.length; row++) {
+        for (int row = 0; row < map.length; row++) {
 
-            for (int col = 0; col < mapData[row].length; col++) {
+            for (int col = 0; col < map[row].length; col++) {
 
-                int tile = mapData[row][col];
+                int tile = map[row][col];
 
                 Image img = null;
 
@@ -81,4 +101,5 @@ public class TileMap {
             }
         }
     }
+
 }

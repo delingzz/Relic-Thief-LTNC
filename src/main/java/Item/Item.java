@@ -16,5 +16,4 @@ public abstract class Item {
     public double getY() {
         return y;
     }
-    public abstract void clear();
 }

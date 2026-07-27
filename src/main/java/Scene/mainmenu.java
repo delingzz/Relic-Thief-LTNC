@@ -26,7 +26,7 @@ public class mainmenu {
          //set nút start game
          Image StartImg = new Image(
                  Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
+                         getClass().getResource("/image/StartButton.png")
                  ).toExternalForm()
          );
          ImageView StartImgV = new ImageView(StartImg);
@@ -40,7 +40,7 @@ public class mainmenu {
          //set nút option
          Image OptImg = new Image(
                  Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
+                         getClass().getResource("/image/Setting.png")
                  ).toExternalForm()
          );
          ImageView OptImgV = new ImageView(OptImg);
@@ -48,13 +48,13 @@ public class mainmenu {
          OptImgV.setFitWidth(BUTTONWIDTH); // set chiều rong
          OptImgV.setPickOnBounds(false);
          OptImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
-         OptImgV.setLayoutY(430); // tọa độ Y của đầu nút
+         OptImgV.setLayoutY(350); // tọa độ Y của đầu nút
          HoverEffect.addHoverEffect(OptImgV);
 
          //set nút tutorial
          Image TutorialImg = new Image(
                  Objects.requireNonNull(
-                         getClass().getResource("/image/images (1).jfif")
+                         getClass().getResource("/image/Tutorial.png")
                  ).toExternalForm()
          );
          ImageView TTImgV = new ImageView(TutorialImg);
@@ -62,7 +62,7 @@ public class mainmenu {
          TTImgV.setFitWidth(BUTTONWIDTH); // set chiều rong
          TTImgV.setPickOnBounds(false);
          TTImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
-         TTImgV.setLayoutY(630); // tọa độ Y của đầu nút
+         TTImgV.setLayoutY(470); // tọa độ Y của đầu nút
          HoverEffect.addHoverEffect(TTImgV);
 
          menup.getChildren().addAll(StartImgV,OptImgV,TTImgV);

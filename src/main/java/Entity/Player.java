@@ -1,6 +1,8 @@
 package Entity;
 
 import Event.input;
+import Scene.TileMap;
+
 import static java.lang.Math.sqrt;
 
 public class Player extends Entity {
@@ -29,8 +31,8 @@ public class Player extends Entity {
         this.maxmana = maxmana;
     }
 
-    public void update() {
-        move();
+    public void update(TileMap map) {
+        move(map);
         healmana();
         manacost();
 
@@ -61,7 +63,6 @@ public class Player extends Entity {
             this.hp = 0;
         }
     }
-
     //cơ chế cộng máu
     public void heal(int healHP) {
         this.hp += healHP;
@@ -100,28 +101,29 @@ public class Player extends Entity {
             }
         }
     }
+    public void move(TileMap map) {
 
-    public void move() {
         double dx = 0;
         double dy = 0;
-        if (input.up) {
-            dy -= 1;
-        }
-        if (input.down) {
-            dy += 1;
-        }
-        if (input.right) {
-            dx += 1;
-        }
-        if (input.left) {
-            dx -= 1;
-        }
+
+        if(input.up) dy--;
+        if(input.down) dy++;
+        if(input.left) dx--;
+        if(input.right) dx++;
+
         double length = sqrt(dx * dx + dy * dy);
-        if (length > 0) {
+
+        if(length > 0) {
             dx /= length;
             dy /= length;
-            x += dx * speed;
-            y += dy * speed;
+        }
+        double nextX = x + dx * speed;
+        double nextY = y + dy * speed;
+        if(!map.isWall(nextX, y)) {
+            x = nextX;
+        }
+        if(!map.isWall(x, nextY)) {
+            y = nextY;
         }
     }
 }
