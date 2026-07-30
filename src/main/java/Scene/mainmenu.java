@@ -14,7 +14,7 @@ import Event.HoverEffect;
 
 public class mainmenu {
      private Stage stage;
-
+     private ImageView backgr = new ImageView();
      public mainmenu(Stage stage) {
          this.stage = stage;
      }
@@ -24,6 +24,14 @@ public class mainmenu {
          Pane menup = new Pane();
 
          //set nút start game
+
+
+         backgr.setImage(new Image(
+                 getClass().getResource("/image/BackGround.png").toExternalForm()
+         ));
+         backgr.setFitWidth(SCREENWIDTH);
+         backgr.setFitHeight(SCREENHEIGHT);
+
          Image StartImg = new Image(
                  Objects.requireNonNull(
                          getClass().getResource("/image/StartButton.png")
@@ -36,6 +44,11 @@ public class mainmenu {
          StartImgV.setLayoutX((SCREENWIDTH-BUTTONWIDTH)/2); // tọa độ X của đầu nút
          StartImgV.setLayoutY(230); // tọa độ Y của đầu nút
          HoverEffect.addHoverEffect(StartImgV);
+
+         StartImgV.setOnMouseClicked(e-> {
+             GameScene gameScene = new GameScene(stage);
+             gameScene.show();
+         });
 
          //set nút option
          Image OptImg = new Image(
@@ -65,7 +78,7 @@ public class mainmenu {
          TTImgV.setLayoutY(470); // tọa độ Y của đầu nút
          HoverEffect.addHoverEffect(TTImgV);
 
-         menup.getChildren().addAll(StartImgV,OptImgV,TTImgV);
+         menup.getChildren().addAll(backgr,StartImgV,OptImgV,TTImgV);
          Scene scene = new Scene(menup, SCREENWIDTH, SCREENHEIGHT);
          stage.setScene(scene);
      }

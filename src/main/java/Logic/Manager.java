@@ -8,19 +8,27 @@ import Item.Key;
 import Item.Relic;
 import Scene.mainmenu;
 import javafx.animation.AnimationTimer;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import Entity.Bot;
 import Scene.TileMap;
 import Item.Inventory;
 import Scene.ReadMap;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
+
+import static Application.RelicThief.SCREENHEIGHT;
+import static Application.RelicThief.SCREENWIDTH;
+import static Scene.TileMap.tileSize;
 
 
 public class Manager {
 
     private final Stage stage;
+    private Pane gamePane;
     private Player player;
     private Entity entity;
     private ArrayList<Bot> bot = new ArrayList<>();
@@ -29,9 +37,11 @@ public class Manager {
     private ArrayList<Bom> bom = new ArrayList<>();
     private Inventory inventory = new Inventory();
     private AnimationTimer gameloop;
+    private long lastTime = 0;
     // kích thước quy định khi vào vùng loot đồ
     private double size =30;
-
+    private static final double deltatime = 0.0167;
+    Random random = new Random();
 
     private int score;
 
@@ -45,7 +55,9 @@ public class Manager {
         inventory.clear();
         score =0;
     }
-    public void update() {
+    public void update(double dt) {
+        if(state != GameState.RUNNING)
+            return;
         player.update(map);
         for(Bot b : bot) {
             b.update(player);
@@ -56,8 +68,10 @@ public class Manager {
 
 
     }
-    public Manager(Stage stage) {
+    public Manager(Stage stage, Pane gamePane) {
         this.stage = stage;
+        this.gamePane = gamePane;
+
     }
     public void showMainMenu() {
         mainmenu main = new mainmenu(stage);
@@ -66,21 +80,49 @@ public class Manager {
     public void creatGameLoop() {
         gameloop = new AnimationTimer() {
             public void handle(long now) {
-                update();
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+                double dt = (now - lastTime) / 1_000_000_000.0;
+                lastTime = now;
+
+                update(dt);
             }
         };
     }
     public void start() {
         clear();
+
+        int[][] original = ReadMap.loadMap("");   //nhập link map
+        map = new TileMap( original);
+
         player = new Player();
         bot.add(new Bot(100,500,map));
         bot.add(new Bot(300,500,map));
-        int[][] original = ReadMap.loadMap("");   //nhập link map
-        map = new TileMap( original);
         state = GameState.RUNNING;
         creatGameLoop();
         gameloop.start();
+    }
+    public void randomSpawn(TileMap map) {
 
+        ArrayList<Point> possible = new ArrayList<>();
+
+        for (int i = 0; i < SCREENHEIGHT / tileSize; i++) {
+            for (int j = 0; j < SCREENWIDTH / tileSize; j++) {
+
+                if (map.getTile(i, j) == 0) {
+                    possible.add(new Point(i, j));
+                }
+            }
+        }
+
+        if (possible.isEmpty()) return;
+
+        Point p = possible.get(random.nextInt(possible.size()));
+
+        Bom bom = new Bom();
+        bom.setPosition(p.x * tileSize, p.y * tileSize);
     }
     public boolean canloot(Item item, Player player) {
         double dx = item.getX() - player.getX();
@@ -99,6 +141,5 @@ public class Manager {
         }
         return false;
     }
-    public void vacham() {
-    }
+
 }

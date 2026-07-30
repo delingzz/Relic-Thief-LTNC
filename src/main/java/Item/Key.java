@@ -14,4 +14,7 @@ public class Key extends Item{
     public void sethavekey(boolean havekey) {
         this.havekey = havekey;
     }
+    public void draw() {
+
+    }
 }

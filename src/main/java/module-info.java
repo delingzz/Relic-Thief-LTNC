@@ -2,7 +2,7 @@ module RelicThief {
 
     requires javafx.controls;
     requires javafx.fxml;
-    requires RelicThief;
+    requires java.desktop;
 
     exports Application;
     exports Scene;
