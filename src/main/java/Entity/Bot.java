@@ -2,6 +2,10 @@ package Entity;
 
 import Scene.TileMap;
 
+import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import static java.lang.Math.abs;
 
 public class Bot extends Entity {
@@ -20,6 +24,7 @@ public class Bot extends Entity {
     public double stuntimer = 5.0;
     private boolean isStun = false;
     private double oldspeed = speed;
+    private ImageView sprite;
 
     private TileMap map;
 
@@ -29,9 +34,19 @@ public class Bot extends Entity {
 
     public Bot(double Sx,double Sy,TileMap map) {
         super(2000, 3.5);
+
         this.Sx = Sx;
         this.Sy = Sy;
         this.map= map;
+        sprite = new ImageView(
+                new Image(
+                        getClass().getResource("/image/Bot.png").toExternalForm()
+                )
+        );
+        sprite.setFitWidth(64);
+        sprite.setFitHeight(64);
+        sprite.setLayoutX(x);
+        sprite.setLayoutY(y);
     }
     public double getX() {
         return this.x;
@@ -73,6 +88,8 @@ public class Bot extends Entity {
         if (!map.isWall(x, nextY)) {
             y = nextY;
         }
+        sprite.setLayoutX(x);
+        sprite.setLayoutY(y);
     }
 
     //hàm đuổi theo người chơi
@@ -131,5 +148,8 @@ public class Bot extends Entity {
             returntospawnpoint();
         }
         patrol();
+    }
+    public ImageView getSprite() {
+        return sprite;
     }
 }

@@ -94,12 +94,20 @@ public class Manager {
     public void start() {
         clear();
 
-        int[][] original = ReadMap.loadMap("");   //nhập link map
+        int[][] original = ReadMap.loadMap("src/main/resources/map.txt");   //nhập link map
         map = new TileMap( original);
 
         player = new Player();
-        bot.add(new Bot(100,500,map));
-        bot.add(new Bot(300,500,map));
+        gamePane.getChildren().add(player.getSprite());
+        Bot b1 = new Bot(100,500,map);
+        Bot b2 = new Bot(300,500,map);
+        bot.add(b1);
+        bot.add(b2);
+
+        gamePane.getChildren().addAll(
+                b1.getSprite(),
+                b2.getSprite()
+        );
         state = GameState.RUNNING;
         creatGameLoop();
         gameloop.start();

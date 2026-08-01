@@ -3,6 +3,12 @@ package Entity;
 import Event.input;
 import Scene.TileMap;
 
+import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.geometry.Rectangle2D;
+
 import static java.lang.Math.sqrt;
 
 public class Player extends Entity {
@@ -22,20 +28,36 @@ public class Player extends Entity {
     private double timeheal = 0;
     private double timetoheal = 1;
 
+    private ImageView sprite;
+    private boolean moving = false;
+    private Direction direction = Direction.DOWN;
+    private int frame = 0;
+    private int k=0;
+    private double animationTimer = 0;
+    private double hitbox= 30;
 
     public Player() {
         super(100, 4.0);
+        x=72;
+        y=36;
         this.maxhp = 100;
         this.oldspeed = speed;
         this.mana = mana;
         this.maxmana = maxmana;
+        sprite = new ImageView(
+                new Image(getClass().getResource("/image/Player.png").toExternalForm())
+        );
+        sprite.setViewport(new Rectangle2D(0,0,48,48));
+        sprite.setPreserveRatio(false);
+
     }
 
     public void update(TileMap map) {
+        //System.out.printf("tét");
         move(map);
         healmana();
         manacost();
-
+        animation();
     }
 
     //lấy tọa độ X và Y;
@@ -102,28 +124,80 @@ public class Player extends Entity {
         }
     }
     public void move(TileMap map) {
-
+        moving = false;
         double dx = 0;
         double dy = 0;
 
-        if(input.up) dy--;
-        if(input.down) dy++;
-        if(input.left) dx--;
-        if(input.right) dx++;
-
+        if(input.up) {
+            direction = Direction.UP;
+            k=3;
+            dy--;
+            moving = true;
+        }
+        if(input.down) {
+            direction = Direction.DOWN;
+            k=0;
+            dy++;
+            moving = true;
+        }
+        if(input.left) {
+            direction = Direction.LEFT;
+            k=1;
+            dx--;
+            moving = true;
+        }
+        if(input.right) {
+            direction = Direction.RIGHT;
+            k=2;
+            dx++;
+            moving = true;
+        }
+        if (input.up) {
+            System.out.println("UP");
+        }
         double length = sqrt(dx * dx + dy * dy);
 
         if(length > 0) {
             dx /= length;
             dy /= length;
         }
+
         double nextX = x + dx * speed;
         double nextY = y + dy * speed;
-        if(!map.isWall(nextX, y)) {
+        double offsetX = (48 - hitbox) / 2;
+        double offsetY = (48 - hitbox) / 2;
+        if (map.canMove(nextX + offsetX, y + offsetY, hitbox, hitbox)) {
             x = nextX;
         }
-        if(!map.isWall(x, nextY)) {
+        if (map.canMove(x + offsetX, nextY + offsetY, hitbox, hitbox)) {
             y = nextY;
         }
+
+        sprite.setLayoutX(x);
+        sprite.setLayoutY(y);
+    }
+    public void animation() {
+        if(moving){
+            animationTimer += 0.0167;
+            if(animationTimer >= 0.15){
+                frame = (frame + 1) % 4;
+                animationTimer = 0;
+            }
+
+        }
+        else {
+            frame =0;
+        }
+        sprite.setViewport(
+                new Rectangle2D(
+                        frame * 48,
+                        k * 48,
+                        48,
+                        48
+                )
+        );
+    }
+    public ImageView getSprite() {
+        return sprite;
     }
 }

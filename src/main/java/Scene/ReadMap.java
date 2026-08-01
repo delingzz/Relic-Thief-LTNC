@@ -11,9 +11,11 @@ public class ReadMap {
     public static int[][] loadMap(String path) {
 
         ArrayList<int[]> rows = new ArrayList<>();
-
+        InputStream is = ReadMap.class.getResourceAsStream(path);
+        if(is == null) {
+            return new int[0][0];
+        }
         try (
-                InputStream is = ReadMap.class.getResourceAsStream(path);
                 BufferedReader br = new BufferedReader(new InputStreamReader(is))
         ) {
 
