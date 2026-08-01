@@ -6,6 +6,7 @@ import Item.Item;
 import Item.Bom;
 import Item.Key;
 import Item.Relic;
+import Scene.Camera;
 import Scene.mainmenu;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
@@ -44,6 +45,7 @@ public class Manager {
     Random random = new Random();
 
     private int score;
+    private Camera camera = new Camera();
 
     private GameState state = GameState.PAUSE;
 
@@ -65,8 +67,10 @@ public class Manager {
         for(Bom m : bom) {
             m.update(player, entity,map);
         }
-
-
+        player.update(map);
+        camera.update(player);
+        gamePane.setLayoutX(-camera.getCameraX());
+        gamePane.setLayoutY(-camera.getCameraY());
     }
     public Manager(Stage stage, Pane gamePane) {
         this.stage = stage;
@@ -94,9 +98,10 @@ public class Manager {
     public void start() {
         clear();
 
-        int[][] original = ReadMap.loadMap("src/main/resources/map.txt");   //nhập link map
+        int[][] original = ReadMap.loadMap("/map.txt");   //nhập link map
         map = new TileMap( original);
-
+        System.out.println(original.length);
+        System.out.println(original[0].length);
         player = new Player();
         gamePane.getChildren().add(player.getSprite());
         Bot b1 = new Bot(100,500,map);

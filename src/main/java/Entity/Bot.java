@@ -33,18 +33,20 @@ public class Bot extends Entity {
     private boolean hastarget = false;
 
     public Bot(double Sx,double Sy,TileMap map) {
-        super(2000, 3.5);
+        super(2000, 1.5);
 
         this.Sx = Sx;
         this.Sy = Sy;
+        this.x = Sx;
+        this.y = Sy;
         this.map= map;
         sprite = new ImageView(
                 new Image(
                         getClass().getResource("/image/Bot.png").toExternalForm()
                 )
         );
-        sprite.setFitWidth(64);
-        sprite.setFitHeight(64);
+        sprite.setFitWidth(36);
+        sprite.setFitHeight(36);
         sprite.setLayoutX(x);
         sprite.setLayoutY(y);
     }
@@ -88,6 +90,8 @@ public class Bot extends Entity {
         if (!map.isWall(x, nextY)) {
             y = nextY;
         }
+        System.out.println("move: " + nextX + " " + nextY);
+        System.out.println("after: " + x + " " + y);
         sprite.setLayoutX(x);
         sprite.setLayoutY(y);
     }
@@ -127,6 +131,7 @@ public class Bot extends Entity {
     public void update(Player player) {
         double distance = Math.sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
         double disspawn = Math.sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
+        System.out.println("distance = " + distance);
         if(isStun==true) {
             stuntimer -= deltatime;
             stun();

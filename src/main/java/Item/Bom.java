@@ -21,6 +21,8 @@ public class Bom extends Item {
     private double R = 108;
     private double bomdame = 200000000;
     private boolean isbom = false;
+
+    private int frame = 0;
     // bán kính bom nổ
     private double blastradius = 100;
     //mảng để lưu vị trí có thể chọn để spawn bom
@@ -81,4 +83,5 @@ public class Bom extends Item {
         dame(entity);
         destroy(map);
     }
+
 }

@@ -37,7 +37,7 @@ public class Player extends Entity {
     private double hitbox= 30;
 
     public Player() {
-        super(100, 4.0);
+        super(100, 2.0);
         x=72;
         y=36;
         this.maxhp = 100;
