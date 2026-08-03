@@ -27,7 +27,6 @@ import static Scene.TileMap.tileSize;
 
 
 public class Manager {
-
     private final Stage stage;
     private Pane gamePane;
     private Player player;
@@ -67,10 +66,30 @@ public class Manager {
         for(Bom m : bom) {
             m.update(player, entity,map);
         }
+
+
+
+        for(Item item : items) {
+            if(item instanceof Key key) {
+                key.update();
+            }
+            if(item instanceof Bom bom) {
+                bom.update();
+            }
+            if(canloot(item,player)) {
+                gamePane.getChildren().remove((item).getSprite());
+            }
+        }
+
+
+
         player.update(map);
         camera.update(player);
         gamePane.setLayoutX(-camera.getCameraX());
         gamePane.setLayoutY(-camera.getCameraY());
+        if(player.getHP() <=0) {
+            state = GameState.LOSE;
+        }
     }
     public Manager(Stage stage, Pane gamePane) {
         this.stage = stage;
@@ -100,14 +119,26 @@ public class Manager {
 
         int[][] original = ReadMap.loadMap("/map.txt");   //nhập link map
         map = new TileMap( original);
-        System.out.println(original.length);
-        System.out.println(original[0].length);
+        map.draw(gamePane);
         player = new Player();
         gamePane.getChildren().add(player.getSprite());
         Bot b1 = new Bot(100,500,map);
         Bot b2 = new Bot(300,500,map);
         bot.add(b1);
         bot.add(b2);
+
+        //test
+
+        Key key = new Key();
+        key.setPosition(200, 200);
+        Bom bom = new Bom();
+        bom.setPosition(100,400);
+        items.add(key);
+        items.add(bom);
+        gamePane.getChildren().add(key.getSprite());
+        gamePane.getChildren().add(bom.getSprite());
+
+
 
         gamePane.getChildren().addAll(
                 b1.getSprite(),

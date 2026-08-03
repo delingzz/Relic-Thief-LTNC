@@ -3,6 +3,7 @@ package Scene;
 import Entity.Player;
 import Logic.Manager;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -27,22 +28,14 @@ public class GameScene {
     }
     public void show() {
 
-        /*background.setImage(new Image(
-                getClass().getResource("/image/Map.jpg").toExternalForm()
-        ));
-        background.setFitWidth(1080);
-        background.setFitHeight(720);
+        ImageView background = new ImageView(
+                new Image(getClass().getResource("/image/test.png").toExternalForm())
+        );
 
-        gamePane.getChildren().addAll(background);
-        root.getChildren().addAll(gamePane,UiPane);
+        background.setFitWidth(SCREENWIDTH);
+        background.setFitHeight(SCREENHEIGHT);
 
-        Scene scene = new Scene(root, SCREENWIDTH, SCREENHEIGHT);
-        manager = new Manager(stage, gamePane);
-        stage.setScene(scene);
-        manager.start();
-
-         */
-        gamePane.setStyle("-fx-background-color: black;");
+        gamePane.getChildren().add(background);
 
         root.getChildren().add(gamePane);
 
@@ -53,9 +46,8 @@ public class GameScene {
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
 
         manager = new Manager(stage, gamePane);
-
+        manager.start();
         stage.setScene(scene);
 
-        manager.start();
     }
 }

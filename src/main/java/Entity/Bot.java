@@ -3,10 +3,12 @@ package Entity;
 import Scene.TileMap;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 public class Bot extends Entity {
 
@@ -32,6 +34,13 @@ public class Bot extends Entity {
     private double targetY;
     private boolean hastarget = false;
 
+    private boolean moving = false;
+    private Direction direction = Direction.DOWN;
+    private double hitbox= 30;
+    private double animationTimer = 0;
+
+    private int frame = 0;
+
     public Bot(double Sx,double Sy,TileMap map) {
         super(2000, 1.5);
 
@@ -42,13 +51,13 @@ public class Bot extends Entity {
         this.map= map;
         sprite = new ImageView(
                 new Image(
-                        getClass().getResource("/image/Bot.png").toExternalForm()
+                        getClass().getResource("/image/BotMoving.png").toExternalForm()
                 )
         );
-        sprite.setFitWidth(36);
-        sprite.setFitHeight(36);
-        sprite.setLayoutX(x);
-        sprite.setLayoutY(y);
+        sprite.setFitWidth(72);
+        sprite.setFitHeight(72);
+        sprite.setLayoutX(x-(60-36)/2.0);
+        sprite.setLayoutY(y-(60-36)/2.0);
     }
     public double getX() {
         return this.x;
@@ -74,26 +83,48 @@ public class Bot extends Entity {
 
     //hàm di chuyển cho bot
     public void move(double X, double Y, TileMap map) {
+        boolean moved = false;
         double deltaX = X - x;
         double deltaY = Y - y;
 
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        double distance = sqrt(deltaX * deltaX + deltaY * deltaY);
 
         if (distance <= 0) return;
 
         double nextX = x + (deltaX / distance) * speed;
         double nextY = y + (deltaY / distance) * speed;
 
-        if (!map.isWall(nextX, y)) {
+        double offsetX = (48 - hitbox) / 2;
+        double offsetY = (48 - hitbox) / 2;
+        if (map.canMove(nextX + offsetX, y + offsetY, hitbox, hitbox)) {
             x = nextX;
+            moving = true;
         }
-        if (!map.isWall(x, nextY)) {
+        if (map.canMove(x + offsetX, nextY + offsetY, hitbox, hitbox)) {
             y = nextY;
+            moving = true;
         }
-        System.out.println("move: " + nextX + " " + nextY);
-        System.out.println("after: " + x + " " + y);
-        sprite.setLayoutX(x);
-        sprite.setLayoutY(y);
+
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) {
+                direction = Direction.RIGHT;
+                k = 3;
+            } else {
+                direction = Direction.LEFT;
+                k = 2;
+            }
+        } else {
+            if (deltaY > 0) {
+                direction = Direction.DOWN;
+                k = 0;
+            } else {
+                direction = Direction.UP;
+                k = 1;
+            }
+        }
+        moving = moved;
+        sprite.setLayoutX(x-(72-36)/2.0);
+        sprite.setLayoutY(y-(72-36)/2.0);
     }
 
     //hàm đuổi theo người chơi
@@ -129,9 +160,9 @@ public class Bot extends Entity {
         this.isStun = stun;
     }
     public void update(Player player) {
-        double distance = Math.sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
-        double disspawn = Math.sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
-        System.out.println("distance = " + distance);
+        moving = false;
+        double distance = sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
+        double disspawn = sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
         if(isStun==true) {
             stuntimer -= deltatime;
             stun();
@@ -143,16 +174,42 @@ public class Bot extends Entity {
         }
         if(distance <= attackspace) {
             attack(player);
-            return;
+            System.out.printf("attack");
         }
-        if(distance <= visible) {
+        else if(distance <= visible) {
             catchplayer(player.getX(), player.getY());
-            return;
+            System.out.printf("catch");
         }
-        if(disspawn >= maxdistance) {
+        else if(disspawn >= maxdistance) {
             returntospawnpoint();
+            System.out.printf("return");
         }
-        patrol();
+        else {
+            patrol();
+        }
+        animation();
+    }
+
+    public void animation() {
+        if(moving){
+            animationTimer += 0.0167;
+            if(animationTimer >= 0.15){
+                frame = (frame + 1) % 4;
+                animationTimer = 0;
+            }
+
+        }
+        else {
+            frame =0;
+        }
+        sprite.setViewport(
+                new Rectangle2D(
+                        frame * 64,
+                        k * 48,
+                        48,
+                        48
+                )
+        );
     }
     public ImageView getSprite() {
         return sprite;

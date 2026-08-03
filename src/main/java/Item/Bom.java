@@ -5,6 +5,9 @@ import Entity.Player;
 import Entity.Bot;
 import Event.input;
 import Scene.TileMap;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,13 +25,22 @@ public class Bom extends Item {
     private double bomdame = 200000000;
     private boolean isbom = false;
 
+    private ImageView sprite;
     private int frame = 0;
+    private double animationTimer = 0;
     // bán kính bom nổ
     private double blastradius = 100;
     //mảng để lưu vị trí có thể chọn để spawn bom
 
     public Bom() {
         super(50);
+        sprite = new ImageView(
+                new Image(getClass().getResource("/image/Bom.png").toExternalForm())
+        );
+        sprite.setViewport(new Rectangle2D(0,0,274,277));
+        sprite.setPreserveRatio(false);
+        sprite.setFitWidth(36);
+        sprite.setFitHeight(36);
     }
 
     public double getX() {
@@ -80,8 +92,30 @@ public class Bom extends Item {
             plant(player);
             input.enter = false;
         }
+        animation();
         dame(entity);
         destroy(map);
+    }
+    public void animation() {
+        animationTimer += 0.0167;
+        if(animationTimer >= 0.15){
+            frame = (frame + 1) % 4;
+            animationTimer = 0;
+        }
+        sprite.setViewport(
+                new Rectangle2D(
+                        frame * 274,
+                        0,
+                        274,
+                        277
+                )
+        );
+    }
+    public ImageView getSprite() {
+        return sprite;
+    }
+    public void update() {
+        animation();
     }
 
 }

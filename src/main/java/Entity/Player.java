@@ -53,11 +53,11 @@ public class Player extends Entity {
     }
 
     public void update(TileMap map) {
-        //System.out.printf("tét");
         move(map);
         healmana();
         manacost();
         animation();
+        System.out.println(hp);
     }
 
     //lấy tọa độ X và Y;
@@ -152,9 +152,7 @@ public class Player extends Entity {
             dx++;
             moving = true;
         }
-        if (input.up) {
-            System.out.println("UP");
-        }
+
         double length = sqrt(dx * dx + dy * dy);
 
         if(length > 0) {
@@ -199,5 +197,8 @@ public class Player extends Entity {
     }
     public ImageView getSprite() {
         return sprite;
+    }
+    public double getHP() {
+        return this.hp;
     }
 }

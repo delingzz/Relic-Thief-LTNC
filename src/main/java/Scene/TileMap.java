@@ -2,6 +2,8 @@ package Scene;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 public class TileMap {
 
@@ -9,7 +11,7 @@ public class TileMap {
     public static final int tileSize = 36;
 
     private final Image wall;
-    private final Image dirt;
+    private final Image ground;
     private final Image breakWall;
     private final Image door;
     private final Image diamond;
@@ -22,7 +24,7 @@ public class TileMap {
             map[i] = original[i].clone();
         }
         wall = new Image(getClass().getResource("/image/test.png").toExternalForm());
-        dirt = new Image(getClass().getResource("/image/test.png").toExternalForm());
+        ground = new Image(getClass().getResource("/image/Ground.png").toExternalForm());
         breakWall = new Image(getClass().getResource("/image/test.png").toExternalForm());
         door = new Image(getClass().getResource("/image/test.png").toExternalForm());
         diamond = new Image(getClass().getResource("/image/test.png").toExternalForm());
@@ -53,52 +55,46 @@ public class TileMap {
         return map[row][col] == 1;
     }
 
-    public void draw(GraphicsContext gc) {
+    public void draw(Pane pane) {
 
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[row].length; col++) {
-                int tile = map[row][col];
-                Image img = null;
-                switch (tile) {
+        for(int row = 0; row < map.length; row++) {
+            for(int col = 0; col < map[0].length; col++) {
+
+                int x = col * tileSize;
+                int y = row * tileSize;
+
+                switch(map[row][col]) {
+
                     case 1:
-                        img = wall;
+                        pane.getChildren().add(makeTile(wall, x, y));
                         break;
+
                     case 2:
-                        img = dirt;
+                        pane.getChildren().add(makeTile(ground, x, y));
                         break;
+
                     case 3:
-                        img = breakWall;
+                        pane.getChildren().add(makeTile(door, x, y));
                         break;
+
                     case 4:
-                        img = door;
+                        pane.getChildren().add(makeTile(food, x, y));
                         break;
-
-                    case 5:
-                        img = diamond;
-                        break;
-
-                    case 6:
-                        img = food;
-                        break;
-
-                    default:
-                        break;
-
-
                 }
-
-                if (img != null) {
-                    gc.drawImage(
-                            img,
-                            col * tileSize,
-                            row * tileSize,
-                            tileSize,
-                            tileSize
-                    );
-                }
-
             }
         }
+    }
+    private ImageView makeTile(Image img, int x, int y) {
+
+        ImageView tile = new ImageView(img);
+
+        tile.setFitWidth(tileSize);
+        tile.setFitHeight(tileSize);
+
+        tile.setLayoutX(x);
+        tile.setLayoutY(y);
+
+        return tile;
     }
     public boolean canMove(double x, double y, double width, double height) {
         return !isWall(x, y)
