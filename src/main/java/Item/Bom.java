@@ -68,16 +68,27 @@ public class Bom extends Item {
         }
     }
     public void destroy(TileMap map) {
-        for(double col= Bx-2;col <= Bx +2;col += 1) {
-            for(double  row = By -2;row<= By +2; row +=1) {
-                double centreX = col * tileSize + tileSize/2;
-                double centreY = row * tileSize + tileSize/2;
 
-                double dx = Bx - centreX;
-                double dy = By - centreY;
-                if(Math.sqrt(dx*dx + dy*dy) <= blastradius) {
-                    if(map.getTile((int)col,(int)row)==2) {
-                        map.setTile((int)col,(int)row,0);
+        int bombCol = (int)(Bx / tileSize);
+        int bombRow = (int)(By / tileSize);
+
+        for (int row = bombRow - 2; row <= bombRow + 2; row++) {
+            for (int col = bombCol - 2; col <= bombCol + 2; col++) {
+
+                if (row < 0 || row >= map.getRows()
+                        || col < 0 || col >= map.getCols()) {
+                    continue;
+                }
+
+                double centerX = col * tileSize + tileSize / 2.0;
+                double centerY = row * tileSize + tileSize / 2.0;
+
+                double dx = Bx - centerX;
+                double dy = By - centerY;
+
+                if (dx * dx + dy * dy <= blastradius * blastradius) {
+                    if (map.getTile(row, col) == 2) {
+                        map.setTile(row, col, 0);
                     }
                 }
             }
@@ -87,13 +98,13 @@ public class Bom extends Item {
         this.x = x;
         this.y = y;
     }
-    public void update(Player player,Entity entity, TileMap map) {
+    public void update(Player player,ArrayList<Bot> bots, TileMap map) {
         if(input.enter) {
             plant(player);
             input.enter = false;
         }
         animation();
-        dame(entity);
+        dame(player);
         destroy(map);
     }
     public void animation() {

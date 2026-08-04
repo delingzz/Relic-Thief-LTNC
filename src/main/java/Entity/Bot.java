@@ -54,7 +54,7 @@ public class Bot extends Entity {
                         getClass().getResource("/image/BotMoving.png").toExternalForm()
                 )
         );
-        sprite.setFitWidth(72);
+        sprite.setFitWidth(92);
         sprite.setFitHeight(72);
         sprite.setLayoutX(x-(60-36)/2.0);
         sprite.setLayoutY(y-(60-36)/2.0);
@@ -98,11 +98,11 @@ public class Bot extends Entity {
         double offsetY = (48 - hitbox) / 2;
         if (map.canMove(nextX + offsetX, y + offsetY, hitbox, hitbox)) {
             x = nextX;
-            moving = true;
+            moved = true;
         }
         if (map.canMove(x + offsetX, nextY + offsetY, hitbox, hitbox)) {
             y = nextY;
-            moving = true;
+            moved = true;
         }
 
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -174,15 +174,12 @@ public class Bot extends Entity {
         }
         if(distance <= attackspace) {
             attack(player);
-            System.out.printf("attack");
         }
         else if(distance <= visible) {
             catchplayer(player.getX(), player.getY());
-            System.out.printf("catch");
         }
         else if(disspawn >= maxdistance) {
             returntospawnpoint();
-            System.out.printf("return");
         }
         else {
             patrol();
@@ -204,10 +201,10 @@ public class Bot extends Entity {
         }
         sprite.setViewport(
                 new Rectangle2D(
-                        frame * 64,
-                        k * 48,
-                        48,
-                        48
+                        frame * 148,
+                        k * 105,
+                        148,
+                        105
                 )
         );
     }

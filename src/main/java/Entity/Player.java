@@ -37,7 +37,7 @@ public class Player extends Entity {
     private double hitbox= 30;
 
     public Player() {
-        super(100, 2.0);
+        super(100, 10.0);
         x=72;
         y=36;
         this.maxhp = 100;
@@ -48,7 +48,8 @@ public class Player extends Entity {
                 new Image(getClass().getResource("/image/Player.png").toExternalForm())
         );
         sprite.setViewport(new Rectangle2D(0,0,48,48));
-        sprite.setPreserveRatio(false);
+        sprite.setFitWidth(48);
+        sprite.setFitHeight(48);
 
     }
 
@@ -57,7 +58,6 @@ public class Player extends Entity {
         healmana();
         manacost();
         animation();
-        System.out.println(hp);
     }
 
     //lấy tọa độ X và Y;
@@ -188,10 +188,10 @@ public class Player extends Entity {
         }
         sprite.setViewport(
                 new Rectangle2D(
-                        frame * 48,
-                        k * 48,
-                        48,
-                        48
+                        frame * 125,
+                        k * 125,
+                        125,
+                        125
                 )
         );
     }

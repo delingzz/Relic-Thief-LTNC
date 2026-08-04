@@ -12,7 +12,7 @@ public class Food extends Item{
     public Food() {
         super(50);
         sprite = new ImageView(
-                new Image(getClass().getResource("/image/Key.png").toExternalForm())
+                new Image(getClass().getResource("/image/Food.png").toExternalForm())
         );
         sprite.setViewport(new Rectangle2D(0,0,274,277));
         sprite.setPreserveRatio(false);
@@ -39,10 +39,10 @@ public class Food extends Item{
         }
         sprite.setViewport(
                 new Rectangle2D(
-                        frame * 274,
+                        frame * 265,
                         0,
-                        274,
-                        277
+                        265,
+                        227
                 )
         );
     }

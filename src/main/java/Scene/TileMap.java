@@ -5,6 +5,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+import java.util.ArrayList;
+
+import static Scene.Camera.MAPHEIGHT;
+import static Scene.Camera.MAPWIDTH;
+
 public class TileMap {
 
     private int[][] map;
@@ -12,24 +18,26 @@ public class TileMap {
 
     private final Image wall;
     private final Image ground;
-    private final Image breakWall;
+    private final Image breakable;
     private final Image door;
-    private final Image diamond;
-    private final Image food;
+    private final Image grass;
+    private final Image relic;
+    private final Image botspawn;
 
+    private ArrayList<Point> botpoint = new ArrayList<>();
 
     public TileMap(int[][] original) {
         map = new int[original.length][];
         for (int i = 0; i < original.length; i++) {
             map[i] = original[i].clone();
         }
-        wall = new Image(getClass().getResource("/image/test.png").toExternalForm());
-        ground = new Image(getClass().getResource("/image/Ground.png").toExternalForm());
-        breakWall = new Image(getClass().getResource("/image/test.png").toExternalForm());
-        door = new Image(getClass().getResource("/image/test.png").toExternalForm());
-        diamond = new Image(getClass().getResource("/image/test.png").toExternalForm());
-        food = new Image(getClass().getResource("/image/test.png").toExternalForm());
-
+        wall = new Image(getClass().getResource("/image/Wall.png").toExternalForm()); //1
+        ground = new Image(getClass().getResource("/image/Ground.png").toExternalForm());  //0
+        breakable = new Image(getClass().getResource("/image/Breakable.png").toExternalForm());  //4
+        grass = new Image(getClass().getResource("/image/Grass.png").toExternalForm());  //3
+        botspawn = new Image(getClass().getResource("/image/botspawn.png").toExternalForm());  //2
+        relic = new Image(getClass().getResource("/image/test.png").toExternalForm());  //5
+        door = new Image(getClass().getResource("/image/test.png").toExternalForm());  //6
     }
 
     public int getTile(int row, int col) {
@@ -64,23 +72,29 @@ public class TileMap {
                 int y = row * tileSize;
 
                 switch(map[row][col]) {
-
+                    case 0:
+                        pane.getChildren().add(makeTile(ground,x,y));
+                        break;
                     case 1:
                         pane.getChildren().add(makeTile(wall, x, y));
                         break;
-
                     case 2:
-                        pane.getChildren().add(makeTile(ground, x, y));
+                        pane.getChildren().add(makeTile(botspawn, x, y));
                         break;
-
                     case 3:
+                        pane.getChildren().add(makeTile(grass, x, y));
+                        break;
+                    case 4:
+                        pane.getChildren().add(makeTile(breakable, x, y));
+                        break;
+                    case 5:
+                        pane.getChildren().add(makeTile(relic, x, y));
+                        break;
+                    case 6:
                         pane.getChildren().add(makeTile(door, x, y));
                         break;
-
-                    case 4:
-                        pane.getChildren().add(makeTile(food, x, y));
-                        break;
                 }
+
             }
         }
     }
@@ -101,5 +115,42 @@ public class TileMap {
                 && !isWall(x + width - 1, y)
                 && !isWall(x, y + height - 1)
                 && !isWall(x + width - 1, y + height - 1);
+    }
+    public int getRows() {
+        return map.length;
+    }
+
+    public int getCols() {
+        return map[0].length;
+    }
+    public ArrayList<Point> BotPoint() {
+        for(int i =0;i<MAPHEIGHT/tileSize;++i) {
+            for(int j =0;j<MAPWIDTH/tileSize;++j) {
+                if(map[i][j] == 2) {
+                    botpoint.add(new Point(j,i));
+                }
+            }
+        }
+        return botpoint;
+    }
+    public Point RelicPoint() {
+        for(int i =0;i<MAPHEIGHT/tileSize;++i) {
+            for(int j =0;j<MAPWIDTH/tileSize;++j) {
+                if(map[i][j] == 5) {
+                    return new Point(j,i);
+                }
+            }
+        }
+        return null;
+    }
+    public Point KeyPoint() {
+        for(int i =0;i<MAPHEIGHT/tileSize;++i) {
+            for(int j =0;j<MAPWIDTH/tileSize;++j) {
+                if(map[i][j] == 6) {
+                    return new Point(j,i);
+                }
+            }
+        }
+        return null;
     }
 }

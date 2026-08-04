@@ -7,8 +7,8 @@ import static Application.RelicThief.SCREENWIDTH;
 
 public class Camera {
 
-    private static final int MAPWIDTH = 100*36;
-    private static final int MAPHEIGHT = 60*36;
+    public static final int MAPWIDTH = 60*36;
+    public static final int MAPHEIGHT = 40*36;
     private double cameraX;
     private double cameraY;
 

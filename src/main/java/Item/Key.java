@@ -4,6 +4,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.awt.*;
+
 public class Key extends Item{
     private boolean havekey = false;
     private ImageView sprite;
@@ -52,10 +54,10 @@ public class Key extends Item{
     public void update() {
         animation();
     }
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-        sprite.setLayoutX(x);
-        sprite.setLayoutY(y);
+    public void setPosition(Point P) {
+        this.x = P.x;
+        this.y = P.y;
+        sprite.setLayoutX(P.x);
+        sprite.setLayoutY(P.y);
     }
 }

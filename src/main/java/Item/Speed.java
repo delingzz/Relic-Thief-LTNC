@@ -14,7 +14,7 @@ public class Speed extends Item{
     public Speed() {
         super(50);
         sprite = new ImageView(
-                new Image(getClass().getResource("/image/Key.png").toExternalForm())
+                new Image(getClass().getResource("/image/Speed.png").toExternalForm())
         );
         sprite.setViewport(new Rectangle2D(0,0,274,277));
         sprite.setPreserveRatio(false);
@@ -38,10 +38,11 @@ public class Speed extends Item{
         }
         sprite.setViewport(
                 new Rectangle2D(
-                        frame * 274,
+                        frame * 265,
                         0,
-                        274,
-                        277
+                        265,
+                        232
+
                 )
         );
     }
