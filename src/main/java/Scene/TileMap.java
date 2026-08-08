@@ -60,7 +60,8 @@ public class TileMap {
                 col < 0 || col >= map[0].length) {
             return true;
         }
-        return map[row][col] == 1;
+        if(map[row][col] ==1 || map[row][col]==4) {return true;}
+        return false;
     }
 
     public void draw(Pane pane) {

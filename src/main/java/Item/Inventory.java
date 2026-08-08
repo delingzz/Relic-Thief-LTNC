@@ -1,6 +1,7 @@
 package Item;
 
 import Entity.Player;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ public class Inventory {
     private static int bomcount = 0;
     private static int foodcount = 0;
     private static int speedcount = 0;
+    private boolean havekey = false;
     // kích thước quy định khi vào vùng loot đồ
     private double size =30;
     // mảng lưu đồ loot được
@@ -39,6 +41,10 @@ public class Inventory {
                 hotbar.add(item);
             }
         }
+        if(item instanceof Key) {
+            havekey = true;
+            hotbar.add(item);
+        }
     }
     //hàm xóa item
     public void remove(Item item) {
@@ -66,6 +72,7 @@ public class Inventory {
         bomcount = 0;
         speedcount =0;
         foodcount =0;
+        havekey = false;
         inventory.clear();
         hotbar.clear();
     }
@@ -74,5 +81,20 @@ public class Inventory {
     }
     public ArrayList<Item> getHotbar() {
         return hotbar;
+    }
+    public void sethavekey(boolean key) {
+        this.havekey = key;
+    }
+    public boolean havekeyk() {
+        return havekey;
+    }
+    public boolean dembom() {
+        return bomcount >=1;
+    }
+    public boolean demfood() {
+        return foodcount >=1;
+    }
+    public boolean demspeed() {
+        return speedcount >=1;
     }
 }

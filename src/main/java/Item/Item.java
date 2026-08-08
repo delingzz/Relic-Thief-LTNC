@@ -25,4 +25,7 @@ public abstract class Item {
     public ImageView getSprite() {
         return sprite;
     }
+    public void update() {
+
+    }
 }

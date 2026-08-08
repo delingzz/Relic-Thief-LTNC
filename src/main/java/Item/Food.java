@@ -1,16 +1,19 @@
 package Item;
 
 import Entity.Player;
+import Scene.TileMap;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.awt.*;
 
 public class Food extends Item{
     private ImageView sprite;
     private int frame = 0;
     private double animationTimer = 0;
     public Food() {
-        super(50);
+        super(70);
         sprite = new ImageView(
                 new Image(getClass().getResource("/image/Food.png").toExternalForm())
         );
@@ -52,10 +55,10 @@ public class Food extends Item{
     public void update() {
         animation();
     }
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-        sprite.setLayoutX(x);
-        sprite.setLayoutY(y);
+    public void setPosition(Point P) {
+        this.x = P.x * TileMap.tileSize;
+        this.y = P.y * TileMap.tileSize ;
+        sprite.setLayoutX(P.x * TileMap.tileSize);
+        sprite.setLayoutY(P.y * TileMap.tileSize);
     }
 }

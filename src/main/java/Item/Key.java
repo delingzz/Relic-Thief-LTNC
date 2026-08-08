@@ -1,5 +1,7 @@
 package Item;
 
+import Scene.TileMap;
+
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +14,7 @@ public class Key extends Item{
     private int frame = 0;
     private double animationTimer = 0;
     public Key() {
-        super(30);
+        super(70);
         sprite = new ImageView(
                 new Image(getClass().getResource("/image/Key.png").toExternalForm())
         );
@@ -55,9 +57,9 @@ public class Key extends Item{
         animation();
     }
     public void setPosition(Point P) {
-        this.x = P.x;
-        this.y = P.y;
-        sprite.setLayoutX(P.x);
-        sprite.setLayoutY(P.y);
+        this.x = P.x * TileMap.tileSize;
+        this.y = P.y * TileMap.tileSize ;
+        sprite.setLayoutX(P.x * TileMap.tileSize);
+        sprite.setLayoutY(P.y * TileMap.tileSize);
     }
 }

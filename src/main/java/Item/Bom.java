@@ -33,7 +33,7 @@ public class Bom extends Item {
     //mảng để lưu vị trí có thể chọn để spawn bom
 
     public Bom() {
-        super(50);
+        super(70);
         sprite = new ImageView(
                 new Image(getClass().getResource("/image/Bom.png").toExternalForm())
         );
@@ -94,9 +94,11 @@ public class Bom extends Item {
             }
         }
     }
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public void setPosition(Point P) {
+        this.x = P.x * TileMap.tileSize;
+        this.y = P.y * TileMap.tileSize ;
+        sprite.setLayoutX(P.x * TileMap.tileSize);
+        sprite.setLayoutY(P.y * TileMap.tileSize);
     }
     public void update(Player player,ArrayList<Bot> bots, TileMap map) {
         if(input.enter) {

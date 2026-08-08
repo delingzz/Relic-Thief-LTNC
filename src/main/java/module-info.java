@@ -5,6 +5,7 @@ module RelicThief {
     requires java.desktop;
     requires javafx.graphics;
 
+
     exports Application;
     exports Scene;
     exports Logic;

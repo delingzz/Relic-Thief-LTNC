@@ -6,17 +6,14 @@ import Item.Item;
 import Item.Bom;
 import Item.Key;
 import Item.Relic;
-import Scene.Camera;
-import Scene.mainmenu;
+import Scene.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import Entity.Bot;
-import Scene.TileMap;
 import Item.Inventory;
 import Item.Food;
 import Item.Speed;
-import Scene.ReadMap;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public class Manager {
     private AnimationTimer gameloop;
     private long lastTime = 0;
     // kích thước quy định khi vào vùng loot đồ
-    private double size = 30;
+    private double size = 36;
     private static final double deltatime = 0.0167;
     Random random = new Random();
 
@@ -54,7 +51,10 @@ public class Manager {
 
     private GameState state = GameState.PAUSE;
     ArrayList<Point> possible = new ArrayList<>();
-    private double spawntime = 10;
+    private double spawntime = 5;
+
+    private GameScene gamescene;
+
 
 
     private int numberspeed = 0;
@@ -62,6 +62,12 @@ public class Manager {
     private int numberbom = 0;
 
     ArrayList<Integer> a = new ArrayList<>();
+
+    public Manager(Stage stage, Pane gamePane, GameScene gameScene) {
+        this.stage = stage;
+        this.gamePane = gamePane;
+        this.gamescene = gameScene;
+    }
 
     public void clear() {
         player = null;
@@ -81,7 +87,21 @@ public class Manager {
         for (Bom m : bom) {
             m.update(player, bot, map);
         }
+        for (Item item : items) {
 
+            if (item instanceof Food food) {
+                food.update();
+            }
+
+            if (item instanceof Speed speed) {
+                speed.update();
+            }
+
+            if (item instanceof Key key) {
+                key.update();
+            }
+        }
+        gamescene.updateHotbar();
         spawntime -= deltatime;
         if (spawntime <= 0) {
             randomSpawn(map);
@@ -116,12 +136,6 @@ public class Manager {
         if (player.getHP() <= 0) {
             state = GameState.LOSE;
         }
-    }
-
-    public Manager(Stage stage, Pane gamePane) {
-        this.stage = stage;
-        this.gamePane = gamePane;
-
     }
 
     public void showMainMenu() {
@@ -206,7 +220,7 @@ public class Manager {
             case 0:
                 numberbom++;
                 Bom b = new Bom();
-                b.setPosition(p.x * tileSize, p.y * tileSize);
+                b.setPosition(p);
                 System.out.println(numberbom);
                 bom.add(b);
                 items.add(b);
@@ -215,7 +229,7 @@ public class Manager {
             case 1:
                 numberfood++;
                 Food f = new Food();
-                f.setPosition(p.x * tileSize, p.y * tileSize);
+                f.setPosition(p);
                 System.out.println(numberfood);
                 items.add(f);
                 gamePane.getChildren().add(f.getSprite());
@@ -223,7 +237,7 @@ public class Manager {
             case 2:
                 numberspeed++;
                 Speed s = new Speed();
-                s.setPosition(p.x * tileSize, p.y * tileSize);
+                s.setPosition(p);
                 System.out.println(numberspeed);
                 items.add(s);
                 gamePane.getChildren().add(s.getSprite());
@@ -253,5 +267,8 @@ public class Manager {
             }
         }
         return false;
+    }
+    public Inventory getInventory() {
+        return inventory;
     }
 }

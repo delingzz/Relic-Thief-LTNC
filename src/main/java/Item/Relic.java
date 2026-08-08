@@ -1,8 +1,11 @@
 package Item;
 
+import Scene.TileMap;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.awt.*;
 
 public class Relic extends Item{
     private ImageView sprite;
@@ -49,10 +52,10 @@ public class Relic extends Item{
     public void update() {
         animation();
     }
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-        sprite.setLayoutX(x);
-        sprite.setLayoutY(y);
+    public void setPosition(Point P) {
+        this.x = P.x * TileMap.tileSize;
+        this.y = P.y * TileMap.tileSize ;
+        sprite.setLayoutX(P.x * TileMap.tileSize);
+        sprite.setLayoutY(P.y * TileMap.tileSize);
     }
 }
