@@ -101,8 +101,8 @@ public class Manager {
                 key.update();
             }
         }
-        gamescene.updateHotbar();
-        spawntime -= deltatime;
+        gamescene.update(player);
+        spawntime -= dt;
         if (spawntime <= 0) {
             randomSpawn(map);
             spawntime = 10;
@@ -176,7 +176,10 @@ public class Manager {
             gamePane.getChildren().add(b.getSprite());
         }
         randomSpawn(map);
-
+        System.out.println(
+                "HP SAU KHI TAO PLAYER: "
+                        + player.getHP() + " / " + player.getMaxHP()
+        );
         state = GameState.RUNNING;
         creatGameLoop();
         gameloop.start();

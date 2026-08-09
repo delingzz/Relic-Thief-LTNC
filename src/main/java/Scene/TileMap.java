@@ -125,6 +125,7 @@ public class TileMap {
         return map[0].length;
     }
     public ArrayList<Point> BotPoint() {
+        botpoint.clear();
         for(int i =0;i<MAPHEIGHT/tileSize;++i) {
             for(int j =0;j<MAPWIDTH/tileSize;++j) {
                 if(map[i][j] == 2) {

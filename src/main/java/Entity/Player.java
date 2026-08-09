@@ -201,4 +201,13 @@ public class Player extends Entity {
     public double getHP() {
         return this.hp;
     }
+    public double getMana() {
+        return this.mana;
+    }
+    public double getMaxHP() {
+        return this.maxhp;
+    }
+    public double getMaxMana() {
+        return this.maxmana;
+    }
 }

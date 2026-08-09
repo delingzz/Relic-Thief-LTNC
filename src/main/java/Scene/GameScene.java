@@ -3,6 +3,8 @@ package Scene;
 import Entity.Player;
 import Item.Item;
 import Logic.Manager;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -10,12 +12,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import Event.input;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import Entity.Player;
 
 import static Application.RelicThief.SCREENHEIGHT;
 import static Application.RelicThief.SCREENWIDTH;
-import static java.lang.System.in;
 import Item.Inventory;
-import Scene.Camera;
 
 public class GameScene {
     private Stage stage;
@@ -23,11 +26,22 @@ public class GameScene {
     private Pane gamePane = new Pane();
     private Pane UiPane = new Pane();
     private Manager manager;
+    private Parent setting;
 
     private ImageView bomicon;
     private ImageView foodicon;
     private ImageView speedicon;
     private ImageView keyicon;
+
+    private Rectangle hpBackground;
+    private Rectangle hpBar;
+
+    private Rectangle manaBackground;
+    private Rectangle manaBar;
+
+    private static final double BAR_WIDTH = 220;
+    private static final double BAR_HEIGHT = 20;
+
 
     public GameScene(Stage stage) {
         this.stage = stage;
@@ -42,7 +56,6 @@ public class GameScene {
         speedicon = new ImageView(new Image(getClass().getResource("/image/speedicon.png").toExternalForm()));
         keyicon = new ImageView(new Image(getClass().getResource("/image/keyicon.png").toExternalForm()));
 
-        Inventory inventory = manager.getInventory();
         bomicon.setFitWidth(40);
         bomicon.setFitHeight(40);
         bomicon.setLayoutX(
@@ -96,11 +109,56 @@ public class GameScene {
 
 
     }
+
+    private void createStatusBar() {
+        hpBackground = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
+        hpBackground.setFill(Color.DARKGRAY);
+        hpBar = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
+        hpBar.setFill(Color.RED);
+
+
+        manaBackground = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
+        manaBackground.setFill(Color.DARKGRAY);
+        manaBar = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
+        manaBar.setFill(Color.DODGERBLUE);
+
+        hpBackground.setLayoutX(30);
+        hpBackground.setLayoutY(30);
+        hpBar.setLayoutX(30);
+        hpBar.setLayoutY(30);
+
+        manaBackground.setLayoutX(30);
+        manaBackground.setLayoutY(60);
+        manaBar.setLayoutX(30);
+        manaBar.setLayoutY(60);
+
+        UiPane.getChildren().addAll(
+                hpBackground,
+                hpBar,
+                manaBackground,
+                manaBar
+        );
+    }
     
     public void show() {
 
         root.getChildren().add(gamePane);
         root.getChildren().add(UiPane);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Setting.fxml")
+            );
+
+            setting = loader.load();
+
+            setting.setVisible(false);
+
+            root.getChildren().add(setting);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Scene scene = new Scene(root, SCREENWIDTH, SCREENHEIGHT);
 
@@ -109,10 +167,11 @@ public class GameScene {
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
         manager = new Manager(stage, gamePane,this);
         Hotbar();
+        createStatusBar();
         stage.setScene(scene);
         manager.start();
     }
-    public void updateHotbar() {
+    public void update(Player player) {
 
         Inventory inventory = manager.getInventory();
 
@@ -139,5 +198,24 @@ public class GameScene {
         } else {
             keyicon.setOpacity(0.3);
         }
+
+
+        double hpPercent =
+                player.getHP() / player.getMaxHP();
+
+        double manaPercent =
+                player.getMana() / player.getMaxMana();
+
+        hpPercent = Math.max(0, Math.min(1, hpPercent));
+        manaPercent = Math.max(0, Math.min(1, manaPercent));
+
+        hpBar.setWidth(BAR_WIDTH * hpPercent);
+        manaBar.setWidth(BAR_WIDTH * manaPercent);
+    }
+    public void showSetting() {
+        setting.setVisible(true);
+    }
+    public void hideSetting() {
+        setting.setVisible(false);
     }
 }
