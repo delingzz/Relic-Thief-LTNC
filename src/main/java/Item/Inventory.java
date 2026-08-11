@@ -85,7 +85,7 @@ public class Inventory {
     public void sethavekey(boolean key) {
         this.havekey = key;
     }
-    public boolean havekeyk() {
+    public boolean havekey() {
         return havekey;
     }
     public boolean dembom() {

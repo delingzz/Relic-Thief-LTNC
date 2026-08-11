@@ -19,25 +19,35 @@ public class TileMap {
     private final Image wall;
     private final Image ground;
     private final Image breakable;
-    private final Image door;
+    private final Image endpoin;
     private final Image grass;
     private final Image relic;
     private final Image botspawn;
+    private final Image door;
+    private final Image banspace;
+
+    private ImageView[][] tileViews;
 
     private ArrayList<Point> botpoint = new ArrayList<>();
+
+    public Point endpoint;
+    public Point doorpoint;
 
     public TileMap(int[][] original) {
         map = new int[original.length][];
         for (int i = 0; i < original.length; i++) {
             map[i] = original[i].clone();
         }
+        tileViews = new ImageView[map.length][map[0].length];
         wall = new Image(getClass().getResource("/image/Wall.png").toExternalForm()); //1
         ground = new Image(getClass().getResource("/image/Ground.png").toExternalForm());  //0
         breakable = new Image(getClass().getResource("/image/Breakable.png").toExternalForm());  //4
         grass = new Image(getClass().getResource("/image/Grass.png").toExternalForm());  //3
         botspawn = new Image(getClass().getResource("/image/botspawn.png").toExternalForm());  //2
         relic = new Image(getClass().getResource("/image/test.png").toExternalForm());  //5
-        door = new Image(getClass().getResource("/image/test.png").toExternalForm());  //6
+        endpoin = new Image(getClass().getResource("/image/endpoint.png").toExternalForm());//6
+        door = new Image(getClass().getResource("/image/door.png").toExternalForm());
+        banspace = new Image(getClass().getResource("/image/banwall.png").toExternalForm());
     }
 
     public int getTile(int row, int col) {
@@ -60,42 +70,57 @@ public class TileMap {
                 col < 0 || col >= map[0].length) {
             return true;
         }
-        if(map[row][col] ==1 || map[row][col]==4) {return true;}
+        if(map[row][col] ==1 || map[row][col]==4 || map[row][col]==3 || map[row][col]==9) {return true;}
         return false;
     }
 
     public void draw(Pane pane) {
 
-        for(int row = 0; row < map.length; row++) {
-            for(int col = 0; col < map[0].length; col++) {
+        for (int row = 0; row < map.length; row++) {
+            for (int col = 0; col < map[0].length; col++) {
 
                 int x = col * tileSize;
                 int y = row * tileSize;
 
-                switch(map[row][col]) {
+                Image image = null;
+
+                switch (map[row][col]) {
                     case 0:
-                        pane.getChildren().add(makeTile(ground,x,y));
+                        image = ground;
                         break;
                     case 1:
-                        pane.getChildren().add(makeTile(wall, x, y));
+                        image = wall;
                         break;
                     case 2:
-                        pane.getChildren().add(makeTile(botspawn, x, y));
+                        image = botspawn;
                         break;
-                    case 3:
-                        pane.getChildren().add(makeTile(grass, x, y));
+                    case 8:
+                        image = grass;
                         break;
                     case 4:
-                        pane.getChildren().add(makeTile(breakable, x, y));
+                        image = breakable;
                         break;
                     case 5:
-                        pane.getChildren().add(makeTile(relic, x, y));
+                        image = relic;
                         break;
-                    case 6:
-                        pane.getChildren().add(makeTile(door, x, y));
+                    case 7:
+                        image = endpoin;
+                        break;
+                    case 9:
+                        image = door;
+                        break;
+                    case 3:
+                        image = banspace;
                         break;
                 }
 
+                if (image != null) {
+                    ImageView tile = makeTile(image, x, y);
+
+                    tileViews[row][col] = tile;
+
+                    pane.getChildren().add(tile);
+                }
             }
         }
     }
@@ -124,12 +149,18 @@ public class TileMap {
     public int getCols() {
         return map[0].length;
     }
-    public ArrayList<Point> BotPoint() {
+    public ArrayList<Point> BotPoint() {   //hàm này cholaays luôn endpoint
         botpoint.clear();
         for(int i =0;i<MAPHEIGHT/tileSize;++i) {
             for(int j =0;j<MAPWIDTH/tileSize;++j) {
                 if(map[i][j] == 2) {
                     botpoint.add(new Point(j,i));
+                }
+                else if(map[i][j]==7) {
+                    endpoint = new Point(j,i);
+                }
+                else if(map[i][j]==9) {
+                    doorpoint = new Point(j,i);
                 }
             }
         }
@@ -154,5 +185,45 @@ public class TileMap {
             }
         }
         return null;
+    }
+    public void changeTile(int row, int col, int newTile) {
+
+        map[row][col] = newTile;
+
+        Image image = null;
+
+        switch (newTile) {
+            case 0:
+                image = ground;
+                break;
+            case 1:
+                image = wall;
+                break;
+            case 2:
+                image = botspawn;
+                break;
+            case 8:
+                image = grass;
+                break;
+            case 4:
+                image = breakable;
+                break;
+            case 5:
+                image = relic;
+                break;
+            case 7:
+                image = endpoin;
+                break;
+            case 9:
+                image = door;
+                break;
+            case 3:
+                image = banspace;
+                break;
+        }
+
+        if (image != null && tileViews[row][col] != null) {
+            tileViews[row][col].setImage(image);
+        }
     }
 }

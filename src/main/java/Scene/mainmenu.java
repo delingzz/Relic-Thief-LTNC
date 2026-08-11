@@ -1,7 +1,9 @@
 package Scene;
 
 import Event.HoverEffect;
+import Logic.GameSession;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,6 +19,8 @@ import static Application.RelicThief.*;
 public class mainmenu {
 
     private Stage stage;
+    private Pane StartPane;
+    private StartController StartController;
 
     private ImageView backgr = new ImageView();
 
@@ -29,11 +33,28 @@ public class mainmenu {
 
     public void show() {
         StackPane root = new StackPane();
+
         Pane menup = new Pane();
         backgr.setImage(new Image(
                 Objects.requireNonNull(getClass().getResource("/image/BackGround.png")).toExternalForm()));
         backgr.setFitWidth(SCREENWIDTH);
         backgr.setFitHeight(SCREENHEIGHT);
+        try {
+            FXMLLoader start = new FXMLLoader(
+                    getClass().getResource("/Scene/StartGame.fxml")
+            );
+
+            StartPane = start.load();
+            StartController = start.getController();
+            StartController.setMainmenu(this);
+            StartPane.setVisible(false);
+            StackPane.setAlignment(StartPane, Pos.TOP_LEFT);
+            StartPane.setTranslateX((SCREENWIDTH - 400) / 2.0);
+            StartPane.setTranslateY((SCREENHEIGHT - 300) / 2.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Image StartImg = new Image(
                 Objects.requireNonNull(getClass().getResource("/image/StartButton.png")).toExternalForm());
         ImageView StartImgV = new ImageView(StartImg);
@@ -45,8 +66,13 @@ public class mainmenu {
         HoverEffect.addHoverEffect(StartImgV);
 
         StartImgV.setOnMouseClicked(e -> {
-            GameScene gameScene = new GameScene(stage);
-            gameScene.show();
+            if(GameSession.hasSavedGame()) {
+                StartPane.setVisible(true);
+            }
+            else {
+                GameScene gamescene = new GameScene(stage);
+                gamescene.show();
+            }
         });
 
         Image OptImg = new Image(
@@ -74,7 +100,7 @@ public class mainmenu {
         HoverEffect.addHoverEffect(TTImgV);
         menup.getChildren().addAll(backgr, StartImgV, OptImgV, TTImgV);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/relicthief/Setting.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene/Setting.fxml"));
             setting = loader.load();
             setting.setVisible(false);
             SettingScene controller = loader.getController();
@@ -91,7 +117,7 @@ public class mainmenu {
         OptImgV.setOnMouseClicked(e -> {
             setting.setVisible(true);
         });
-        root.getChildren().addAll(menup,setting);
+        root.getChildren().addAll(menup,setting,StartPane);
         Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
         stage.setScene(scene);
         stage.show();
@@ -101,5 +127,8 @@ public class mainmenu {
         if (setting != null) {
             setting.setVisible(false);
         }
+    }
+    public Stage getStage() {
+        return this.stage;
     }
 }

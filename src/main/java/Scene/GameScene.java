@@ -1,12 +1,11 @@
 package Scene;
 
 import Entity.Player;
-import Item.Item;
+import Logic.GameSession;
 import Logic.Manager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -14,7 +13,6 @@ import javafx.stage.Stage;
 import Event.input;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import Entity.Player;
 
 import static Application.RelicThief.SCREENHEIGHT;
 import static Application.RelicThief.SCREENWIDTH;
@@ -26,6 +24,7 @@ public class GameScene {
     private Pane gamePane = new Pane();
     private Pane UiPane = new Pane();
     private Manager manager;
+    private GameSession savegame;
     private Parent setting;
 
     private ImageView bomicon;
@@ -42,9 +41,17 @@ public class GameScene {
     private static final double BAR_WIDTH = 220;
     private static final double BAR_HEIGHT = 20;
 
+    private Pane PausePane;
+    private PauseController pauseController;
 
+
+    public GameScene(Stage stage, Manager manager) {
+        this.stage = stage;
+        this.manager = manager;
+    }
     public GameScene(Stage stage) {
         this.stage = stage;
+        this.manager = null;
     }
 
     public void Hotbar() {
@@ -147,14 +154,23 @@ public class GameScene {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/Setting.fxml")
+                    getClass().getResource("/Scene/Setting.fxml")
             );
-
             setting = loader.load();
-
             setting.setVisible(false);
 
-            root.getChildren().add(setting);
+            FXMLLoader pause = new FXMLLoader(
+                    getClass().getResource("/Scene/GamePause.fxml")
+            );
+            PausePane = pause.load();
+            pauseController = pause.getController();
+            pauseController.setGameScene(this);
+
+            PausePane.setLayoutX((SCREENWIDTH-600)/2);
+            PausePane.setLayoutY((SCREENHEIGHT-500)/2);
+            PausePane.setVisible(false);
+
+            root.getChildren().addAll(setting,PausePane);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,11 +181,17 @@ public class GameScene {
         input inputHandler = new input();
         scene.setOnKeyPressed(inputHandler::handleKeyPressed);
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
-        manager = new Manager(stage, gamePane,this);
+        if (manager == null) {
+            manager = new Manager(stage, gamePane, this);
+            manager.start();
+        } else {
+            manager.setGamePane(gamePane);
+            manager.setGameScene(this);
+            manager.continuegame2();
+        }
         Hotbar();
         createStatusBar();
         stage.setScene(scene);
-        manager.start();
     }
     public void update(Player player) {
 
@@ -193,7 +215,7 @@ public class GameScene {
             speedicon.setOpacity(0.3);
         }
 
-        if (inventory.havekeyk()) {
+        if (inventory.havekey()) {
             keyicon.setOpacity(1.0);
         } else {
             keyicon.setOpacity(0.3);
@@ -217,5 +239,26 @@ public class GameScene {
     }
     public void hideSetting() {
         setting.setVisible(false);
+    }
+    public void showgamepause() {
+        PausePane.setVisible(true);
+    }
+    public void hidegamepause() {
+        PausePane.setVisible(false);
+    }
+    public void continuegame() {
+        manager.continuegame();
+        hidegamepause();
+    }
+    public void restartgame() {
+        GameSession.clear();
+        manager.start();
+        hidegamepause();
+    }
+    public void exitgame() {
+        GameSession.save(manager);
+        manager.exit();
+        mainmenu menu = new mainmenu(stage);
+        menu.show();
     }
 }

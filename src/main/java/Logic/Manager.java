@@ -14,6 +14,9 @@ import Entity.Bot;
 import Item.Inventory;
 import Item.Food;
 import Item.Speed;
+import Event.input;
+import Entity.Portal;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,15 +28,18 @@ import static Application.RelicThief.SCREENHEIGHT;
 import static Application.RelicThief.SCREENWIDTH;
 import static Scene.TileMap.tileSize;
 import static java.lang.Math.random;
+import static java.lang.Math.sqrt;
 
 
 public class Manager {
 
     private static final int MAPWIDTH = 60 * 36;
     private static final int MAPHEIGHT = 40 * 36;
+
     private final Stage stage;
     private Pane gamePane;
     private Player player;
+    private Portal portal;
     private ArrayList<Bot> bot = new ArrayList<>();
     private TileMap map;
     private ArrayList<Item> items = new ArrayList<>();
@@ -55,11 +61,13 @@ public class Manager {
 
     private GameScene gamescene;
 
-
+    private boolean escpressed = false;
 
     private int numberspeed = 0;
     private int numberfood = 0;
     private int numberbom = 0;
+
+    private boolean dooropened = false;
 
     ArrayList<Integer> a = new ArrayList<>();
 
@@ -70,6 +78,9 @@ public class Manager {
     }
 
     public void clear() {
+        numberspeed = 0;
+        numberfood = 0;
+        numberbom = 0;
         player = null;
         bot.clear();
         items.clear();
@@ -79,8 +90,16 @@ public class Manager {
     }
 
     public void update(double dt) {
-        if (state != GameState.RUNNING)
+        if (input.esc && !escpressed) {
+            pause();
+            escpressed = true;
+        }
+        if (!input.esc) {
+            escpressed = false;
+        }else if(state != GameState.RUNNING)
             return;
+        player.update(map);
+        portal.update();
         for (Bot b : bot) {
             b.update(player);
         }
@@ -102,13 +121,12 @@ public class Manager {
             }
         }
         gamescene.update(player);
+        opendoor();
         spawntime -= dt;
         if (spawntime <= 0) {
             randomSpawn(map);
             spawntime = 10;
         }
-
-        player.update(map);
         camera.update(player);
         gamePane.setLayoutX(-camera.getCameraX());
         gamePane.setLayoutY(-camera.getCameraY());
@@ -150,15 +168,24 @@ public class Manager {
                     lastTime = now;
                     return;
                 }
+                if(state != GameState.RUNNING) {
+                    return;
+                }
                 double dt = (now - lastTime) / 1_000_000_000.0;
                 lastTime = now;
-
+                if (input.esc) {
+                    System.out.println("ESC NHAN");
+                }
+                dt = Math.min(dt, 0.05);
                 update(dt);
             }
         };
     }
 
     public void start() {
+        if (gameloop != null) {
+            gameloop.stop();
+        }
         clear();
 
         int[][] original = ReadMap.loadMap("/map.txt");   //nhập link map
@@ -175,6 +202,9 @@ public class Manager {
             bot.add(b);
             gamePane.getChildren().add(b.getSprite());
         }
+        portal = new Portal(map.endpoint.x*tileSize,map.endpoint.y * tileSize);
+        gamePane.getChildren().add(portal.getSprite());
+        player.getSprite().toFront();
         randomSpawn(map);
         System.out.println(
                 "HP SAU KHI TAO PLAYER: "
@@ -200,11 +230,11 @@ public class Manager {
         if (a.isEmpty())
             return;
         possible.clear();
-        for (int i = 0; i < MAPHEIGHT / tileSize; i++) {
-            for (int j = 0; j < MAPWIDTH / tileSize; j++) {
+        for (int i = 0; i < map.getRows(); i++) {
+            for (int j = 0; j < map.getCols(); j++) {
 
                 if (map.getTile(i, j) == 0) {
-                    possible.add(new Point(j, i));
+                    possible.add(new Point(i, j));
                 }
             }
         }
@@ -273,5 +303,61 @@ public class Manager {
     }
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void pause() {
+        if(state == GameState.RUNNING) {
+            gamescene.showgamepause();
+            state = GameState.PAUSE;
+        }
+        else if(state == GameState.PAUSE) {
+            gamescene.hidegamepause();
+            state  = GameState.RUNNING;
+        }
+    }
+    public void continuegame() {
+        lastTime = 0;
+        state = GameState.RUNNING;
+    }
+    public void exit() {
+        GameSession.save(this);
+        state = GameState.PAUSE;
+    }
+    public void setGamePane(Pane gamePane) {
+        this.gamePane = gamePane;
+    }
+
+    public void setGameScene(GameScene gameScene) {
+        this.gamescene = gameScene;
+    }
+    public void continuegame2() {
+        map.draw(gamePane);
+        gamePane.getChildren().add(player.getSprite());
+        for (Bot b : bot) {
+            gamePane.getChildren().add(b.getSprite());
+        }
+        for (Item item : items) {
+            gamePane.getChildren().add(item.getSprite());
+        }
+        state = GameState.RUNNING;
+    }
+    public void win() {
+        state = GameState.WIN;
+    }
+    public void opendoor() {
+        if(dooropened == true) {
+            return;
+        }
+        if(!inventory.havekey()) {
+            return;
+        }
+        double distancex = player.getX() - (map.doorpoint.x*36 + 18);
+        double distancey = player.getY() - (map.doorpoint.y*36 + 18);
+        double distance = sqrt(distancex*distancex + distancey*distancey);
+
+        if(distance < player.hitbox +18) {
+            map.changeTile(map.doorpoint.y, map.doorpoint.x, 0);
+
+        }
     }
 }

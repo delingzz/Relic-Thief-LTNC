@@ -10,6 +10,7 @@ public class input {
     public static boolean left;
     public static boolean right;
     public static boolean enter;
+    public static boolean esc;
     public void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
         if (code == KeyCode.W || code == KeyCode.UP) {
@@ -26,6 +27,9 @@ public class input {
         }
         if(code == KeyCode.ENTER) {
             enter = true;
+        }
+        if(code == KeyCode.ESCAPE) {
+            esc = true;
         }
     }
     public void handleKeyReleased(KeyEvent event) {
@@ -44,6 +48,9 @@ public class input {
         }
         if(code == KeyCode.ENTER) {
             enter = false;
+        }
+        if(code == KeyCode.ESCAPE) {
+            esc = false;
         }
     }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Scene.PauseController">
+   <children>
+      <ImageView fitHeight="500.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/PauseBg.png" />
+         </image>
+      </ImageView>
+      <VBox layoutX="72.0" layoutY="122.0" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+         <children>
+            <ImageView fx:id="restart" fitHeight="150.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Restart.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="cont" fitHeight="150.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Continue.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="exi" fitHeight="150.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/exitbutton.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+      <Slider layoutX="355.0" layoutY="203.0" orientation="VERTICAL" />
+      <Slider layoutX="445.0" layoutY="149.0" orientation="VERTICAL" />
+      <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="319.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/effecttext.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="402.0" layoutY="302.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/soundtext.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

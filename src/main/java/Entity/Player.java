@@ -34,7 +34,9 @@ public class Player extends Entity {
     private int frame = 0;
     private int k=0;
     private double animationTimer = 0;
-    private double hitbox= 30;
+    public double hitbox= 20;
+
+    private boolean cantakedame = false;
 
     public Player() {
         super(100, 10.0);
@@ -80,9 +82,14 @@ public class Player extends Entity {
 
     //cơ chế trừ máu
     public void takedame(double damage) {
-        this.hp -= damage;
-        if (this.hp <= 0) {
-            this.hp = 0;
+        if(cantakedame == true) {
+            this.hp -= damage;
+            if (this.hp <= 0) {
+                this.hp = 0;
+            }
+        }
+        else {
+            this.hp -= 0;
         }
     }
     //cơ chế cộng máu
@@ -209,5 +216,8 @@ public class Player extends Entity {
     }
     public double getMaxMana() {
         return this.maxmana;
+    }
+    public void setcantakedame(boolean a) {
+        this.cantakedame = a;
     }
 }

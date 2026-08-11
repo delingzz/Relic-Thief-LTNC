@@ -14,4 +14,11 @@ public abstract class Entity {
         this.hp = hp;
         this.speed = speed;
     }
+    public Entity(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    public void update() {
+
+    }
 }

@@ -36,8 +36,9 @@ public class Bot extends Entity {
 
     private boolean moving = false;
     private Direction direction = Direction.DOWN;
-    private double hitbox= 30;
+    private double hitbox= 20;
     private double animationTimer = 0;
+    public double undeathtime = 3.0;
 
     private int frame = 0;
 
@@ -161,6 +162,14 @@ public class Bot extends Entity {
     }
     public void update(Player player) {
         moving = false;
+        if(undeathtime >0) {
+            undeathtime -= deltatime;
+        }
+        else {
+            if(undeathtime <=0) {
+                player.setcantakedame(true);
+            }
+        }
         double distance = sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
         double disspawn = sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
         if(isStun==true) {
