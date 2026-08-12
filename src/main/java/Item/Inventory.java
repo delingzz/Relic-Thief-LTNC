@@ -13,6 +13,7 @@ public class Inventory {
     private static int foodcount = 0;
     private static int speedcount = 0;
     private boolean havekey = false;
+    private boolean haverelic = false;
     // kích thước quy định khi vào vùng loot đồ
     private double size =30;
     // mảng lưu đồ loot được
@@ -44,6 +45,9 @@ public class Inventory {
         if(item instanceof Key) {
             havekey = true;
             hotbar.add(item);
+        }
+        if(item instanceof Relic) {
+            haverelic = true;
         }
     }
     //hàm xóa item
@@ -84,6 +88,9 @@ public class Inventory {
     }
     public void sethavekey(boolean key) {
         this.havekey = key;
+    }
+    public boolean haverelic() {
+        return haverelic;
     }
     public boolean havekey() {
         return havekey;

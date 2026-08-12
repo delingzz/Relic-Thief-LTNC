@@ -21,7 +21,6 @@ public class TileMap {
     private final Image breakable;
     private final Image endpoin;
     private final Image grass;
-    private final Image relic;
     private final Image botspawn;
     private final Image door;
     private final Image banspace;
@@ -44,7 +43,6 @@ public class TileMap {
         breakable = new Image(getClass().getResource("/image/Breakable.png").toExternalForm());  //4
         grass = new Image(getClass().getResource("/image/Grass.png").toExternalForm());  //3
         botspawn = new Image(getClass().getResource("/image/botspawn.png").toExternalForm());  //2
-        relic = new Image(getClass().getResource("/image/test.png").toExternalForm());  //5
         endpoin = new Image(getClass().getResource("/image/endpoint.png").toExternalForm());//6
         door = new Image(getClass().getResource("/image/door.png").toExternalForm());
         banspace = new Image(getClass().getResource("/image/banwall.png").toExternalForm());
@@ -101,7 +99,7 @@ public class TileMap {
                         image = breakable;
                         break;
                     case 5:
-                        image = relic;
+                        image = ground;
                         break;
                     case 7:
                         image = endpoin;
@@ -209,7 +207,7 @@ public class TileMap {
                 image = breakable;
                 break;
             case 5:
-                image = relic;
+                image = ground;
                 break;
             case 7:
                 image = endpoin;

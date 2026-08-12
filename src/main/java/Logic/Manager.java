@@ -107,21 +107,22 @@ public class Manager {
             m.update(player, bot, map);
         }
         for (Item item : items) {
-
             if (item instanceof Food food) {
                 food.update();
             }
-
             if (item instanceof Speed speed) {
                 speed.update();
             }
-
             if (item instanceof Key key) {
                 key.update();
+            }
+            if(item instanceof Relic relic) {
+                relic.update();
             }
         }
         gamescene.update(player);
         opendoor();
+        win();
         spawntime -= dt;
         if (spawntime <= 0) {
             randomSpawn(map);
@@ -193,10 +194,17 @@ public class Manager {
         map.draw(gamePane);
         player = new Player();
         gamePane.getChildren().add(player.getSprite());
+
         Key key = new Key();
         items.add(key);
         gamePane.getChildren().add(key.getSprite());
         key.setPosition(map.KeyPoint());
+
+        Relic relic = new Relic();
+        items.add(relic);
+        gamePane.getChildren().add(relic.getSprite());
+        relic.setPosition(map.RelicPoint());
+
         for(Point p : map.BotPoint()) {
             Bot b = new Bot(p.x * tileSize, p.y*tileSize,map);
             bot.add(b);
@@ -342,7 +350,17 @@ public class Manager {
         state = GameState.RUNNING;
     }
     public void win() {
-        state = GameState.WIN;
+        if(inventory.haverelic() == false) {
+            return;
+        }
+        double distancex = player.getX() - (map.endpoint.x*36);
+        double distancey = player.getY() - (map.endpoint.y*36);
+        double distance = sqrt(distancex*distancex + distancey*distancey);
+
+        if(distance < player.hitbox +18) {
+            map.changeTile(map.endpoint.y, map.endpoint.x, 0);
+            state = GameState.WIN;
+        }
     }
     public void opendoor() {
         if(dooropened == true) {
@@ -351,8 +369,8 @@ public class Manager {
         if(!inventory.havekey()) {
             return;
         }
-        double distancex = player.getX() - (map.doorpoint.x*36 + 18);
-        double distancey = player.getY() - (map.doorpoint.y*36 + 18);
+        double distancex = player.getX() - (map.doorpoint.x*36 +18);
+        double distancey = player.getY() - (map.doorpoint.y*36 +18);
         double distance = sqrt(distancex*distancex + distancey*distancey);
 
         if(distance < player.hitbox +18) {

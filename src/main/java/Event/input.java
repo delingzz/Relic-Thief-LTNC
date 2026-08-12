@@ -11,6 +11,13 @@ public class input {
     public static boolean right;
     public static boolean enter;
     public static boolean esc;
+
+    public static boolean s1;
+    public static boolean s2;
+    public static boolean s3;
+    public static boolean s4;
+    public static boolean s5;
+
     public void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
         if (code == KeyCode.W || code == KeyCode.UP) {
@@ -30,6 +37,21 @@ public class input {
         }
         if(code == KeyCode.ESCAPE) {
             esc = true;
+        }
+        if(code == KeyCode.DIGIT1) {
+            s1 = true;
+        }
+        if(code == KeyCode.DIGIT2) {
+            s2 = true;
+        }
+        if(code == KeyCode.DIGIT3) {
+            s3 = true;
+        }
+        if(code == KeyCode.DIGIT4) {
+            s4 = true;
+        }
+        if(code == KeyCode.DIGIT5) {
+            s5 = true;
         }
     }
     public void handleKeyReleased(KeyEvent event) {
@@ -51,6 +73,21 @@ public class input {
         }
         if(code == KeyCode.ESCAPE) {
             esc = false;
+        }
+        if(code == KeyCode.DIGIT1) {
+            s1 = false;
+        }
+        if(code == KeyCode.DIGIT2) {
+            s2 = false;
+        }
+        if(code == KeyCode.DIGIT3) {
+            s3 = false;
+        }
+        if(code == KeyCode.DIGIT4) {
+            s4 = false;
+        }
+        if(code == KeyCode.DIGIT5) {
+            s5 = false;
         }
     }
 }

@@ -44,6 +44,9 @@ public class GameScene {
     private Pane PausePane;
     private PauseController pauseController;
 
+    private ImageView selectionframe;
+    private int select = 0;
+
 
     public GameScene(Stage stage, Manager manager) {
         this.stage = stage;
@@ -179,7 +182,10 @@ public class GameScene {
         Scene scene = new Scene(root, SCREENWIDTH, SCREENHEIGHT);
 
         input inputHandler = new input();
-        scene.setOnKeyPressed(inputHandler::handleKeyPressed);
+        scene.setOnKeyPressed(event -> {
+            inputHandler.handleKeyPressed(event);
+            updateSelectionFrame();
+        });
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
         if (manager == null) {
             manager = new Manager(stage, gamePane, this);
@@ -190,6 +196,7 @@ public class GameScene {
             manager.continuegame2();
         }
         Hotbar();
+        setSelectionframe();
         createStatusBar();
         stage.setScene(scene);
     }
@@ -260,5 +267,34 @@ public class GameScene {
         manager.exit();
         mainmenu menu = new mainmenu(stage);
         menu.show();
+    }
+    public void setSelectionframe() {
+        selectionframe = new ImageView(new Image(getClass().getResource("/image/selectionframe.png").toExternalForm()));
+
+        selectionframe.setFitWidth(55);
+        selectionframe.setFitHeight(55);
+        select = 1;
+        selectionframe.setLayoutX(270 + select * 60);
+        selectionframe.setLayoutY(644);
+        UiPane.getChildren().add(selectionframe);
+    }
+    private void updateSelectionFrame() {
+
+        if (input.s1) {
+            select = 1;
+        }
+        else if (input.s2) {
+            select = 2;
+        }
+        else if (input.s3) {
+            select = 3;
+        }
+        else if (input.s4) {
+            select = 4;
+        }
+        else if (input.s5) {
+            select = 5;
+        }
+        selectionframe.setLayoutX(270 + select * 60);
     }
 }
