@@ -69,6 +69,8 @@ public class Manager {
 
     private boolean dooropened = false;
 
+    private int select = 0;
+
     ArrayList<Integer> a = new ArrayList<>();
 
     public Manager(Stage stage, Pane gamePane, GameScene gameScene) {
@@ -120,6 +122,7 @@ public class Manager {
                 relic.update();
             }
         }
+        select();
         gamescene.update(player);
         opendoor();
         win();
@@ -184,45 +187,58 @@ public class Manager {
     }
 
     public void start() {
+        //xoa gameloop neu con ton tai
         if (gameloop != null) {
             gameloop.stop();
         }
+
+        //clear tat ca tu dau
         clear();
 
-        int[][] original = ReadMap.loadMap("/map.txt");   //nhập link map
+        //khoi tao map
+        int[][] original = ReadMap.loadMap("/map.txt");
         map = new TileMap(original);
         map.draw(gamePane);
         player = new Player();
         gamePane.getChildren().add(player.getSprite());
 
+        //khoi tao vi tri key
         Key key = new Key();
         items.add(key);
         gamePane.getChildren().add(key.getSprite());
         key.setPosition(map.KeyPoint());
 
+
+        //khoi tao relic
         Relic relic = new Relic();
         items.add(relic);
         gamePane.getChildren().add(relic.getSprite());
         relic.setPosition(map.RelicPoint());
 
+        //doc cac point cua bot de spawn bot
         for(Point p : map.BotPoint()) {
             Bot b = new Bot(p.x * tileSize, p.y*tileSize,map);
             bot.add(b);
             gamePane.getChildren().add(b.getSprite());
         }
+
+        //khoi tao portal
         portal = new Portal(map.endpoint.x*tileSize,map.endpoint.y * tileSize);
         gamePane.getChildren().add(portal.getSprite());
+        //day player len truoc
         player.getSprite().toFront();
+
+        //bat dau random spawn food, speed, bom
         randomSpawn(map);
-        System.out.println(
-                "HP SAU KHI TAO PLAYER: "
-                        + player.getHP() + " / " + player.getMaxHP()
-        );
+
+        //khoi tao trang thai game = running
         state = GameState.RUNNING;
+        //khoi tao game loop
         creatGameLoop();
         gameloop.start();
     }
 
+    //ham random cac vat pham trong game de nguoi choi su dung
     public void randomSpawn(TileMap map) {
         a.clear();
 
@@ -286,6 +302,7 @@ public class Manager {
         }
     }
 
+    //ham kiem tra xem co the loot duoc vat pham khong
     public boolean canloot(Item item, Player player) {
         double dx = item.getX() - player.getX();
         double dy = item.getY() - player.getY();
@@ -298,6 +315,7 @@ public class Manager {
         return dx * dx + dy * dy <= size * size;
     }
 
+    //ham kiem tra xem tai vi tri nay co vat pham dang co tren map hay ko de spawn
     private boolean hasItem(int col, int row) {
         double x = col * tileSize;
         double y = row * tileSize;
@@ -369,13 +387,56 @@ public class Manager {
         if(!inventory.havekey()) {
             return;
         }
-        double distancex = player.getX() - (map.doorpoint.x*36 +18);
-        double distancey = player.getY() - (map.doorpoint.y*36 +18);
-        double distance = sqrt(distancex*distancex + distancey*distancey);
+        if(select ==4 && input.enter) {
+            double distancex = player.getX() - (map.doorpoint.x*36 +18);
+            double distancey = player.getY() - (map.doorpoint.y*36 +18);
+            double distance = sqrt(distancex*distancex + distancey*distancey);
 
-        if(distance < player.hitbox +18) {
-            map.changeTile(map.doorpoint.y, map.doorpoint.x, 0);
+            if(distance < player.hitbox +18) {
+                map.changeTile(map.doorpoint.y, map.doorpoint.x, 0);
+            }
+        }
+    }
+    public void select() {
+        if(input.s2) {
+            select = 1;
+            if(numberbom >=1 && input.enter && select ==1) {
+                numberbom--;
+                Bom b = new Bom();
+                b.plant(player);
+                b.dame(player);
+                for(Bot b1 : bot) {
+                    b.dame(b1);
+                }
+                b.destroy(map);
 
+            }
+        }
+        else if(input.s2) {
+            select =2 ;
+            if(numberfood >=1 && input.enter && select == 2) {
+                player.heal(40);
+            }
+        }
+        else if(input.s3) {
+            select = 3;
+            if(numberspeed >=1 && input.enter && select ==3) {
+                speedup();
+            }
+        }
+        else if(input.s4) {
+            select = 4;
+        }
+    }
+
+    private double speeduptime =5;
+    public void speedup() {
+        if(speeduptime >=0) {
+            speeduptime -= 0.0167;
+            player.SpeedUp(20);
+        }
+        else if(speeduptime <0) {
+            player.ResetSpeed();
         }
     }
 }

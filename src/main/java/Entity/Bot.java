@@ -14,7 +14,7 @@ public class Bot extends Entity {
 
     //set tầm nhìn cho bot
     private double visible = 200;
-    private double attackspace = 20;
+    private double attackspace = 40;
     private double damage = 40;
     private double attacktimer = 0;
     private double timetoattack = 1.5;

@@ -9,9 +9,9 @@ import static java.lang.Math.abs;
 
 public class Inventory {
     //biến đếm số lượng vật phầm
-    private static int bomcount = 0;
-    private static int foodcount = 0;
-    private static int speedcount = 0;
+    public static int bomcount = 0;
+    public static int foodcount = 0;
+    public static int speedcount = 0;
     private boolean havekey = false;
     private boolean haverelic = false;
     // kích thước quy định khi vào vùng loot đồ
