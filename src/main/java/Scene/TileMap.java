@@ -110,6 +110,9 @@ public class TileMap {
                     case 3:
                         image = banspace;
                         break;
+                    case 6:
+                        image = ground;
+                        break;
                 }
 
                 if (image != null) {
@@ -217,6 +220,9 @@ public class TileMap {
                 break;
             case 3:
                 image = banspace;
+                break;
+            case 6:
+                image = ground;
                 break;
         }
 

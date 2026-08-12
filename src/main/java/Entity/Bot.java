@@ -17,7 +17,7 @@ public class Bot extends Entity {
     private double attackspace = 40;
     private double damage = 40;
     private double attacktimer = 0;
-    private double timetoattack = 1.5;
+    private double timetoattack = 0.5;
     private double maxdistance = 100;
     private double k = 0.5;//set tạm thế
     private int PatrolTimer = 0;
@@ -158,6 +158,7 @@ public class Bot extends Entity {
     }
     public void setstun(boolean stun) {
         this.isStun = stun;
+        System.out.println("stun");
     }
     public void update(Player player) {
         moving = false;

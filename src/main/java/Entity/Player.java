@@ -21,8 +21,9 @@ public class Player extends Entity {
     //set up cho tiêu hao Mana;
     private double manaTimer = 0;
     private final int space = 1;
-    private double manacons = 3.5;
-    private boolean ismanaconsume = true;
+    private double manacons = 1000;
+    private double manaheal = 10;
+    private boolean ismanaconsume = false;
 
     //set up cho hồi phục mana;
     private double timeheal = 0;
@@ -40,8 +41,8 @@ public class Player extends Entity {
 
     public Player() {
         super(100, 10.0);
-        x=72;
-        y=36;
+        x=3*36;
+        y=5* 36;
         this.maxhp = 100;
         this.oldspeed = speed;
         this.mana = mana;
@@ -74,14 +75,22 @@ public class Player extends Entity {
     //chính sửa tốc độ
     public void SpeedUp(double speed) {
         this.speed = speed;
+        ismanaconsume = true;
     }
 
     public void ResetSpeed() {
         this.speed = oldspeed;
+        ismanaconsume = false;
     }
 
     //cơ chế trừ máu
     public void takedame(double damage) {
+        System.out.println("DAMAGE!!! " + damage + " | HP = " + hp);
+        if (damage > 1000) {
+            System.out.println("INVALID DAMAGE = " + damage);
+            Thread.dumpStack();
+            return;
+        }
         if(cantakedame == true) {
             this.hp -= damage;
             if (this.hp <= 0) {
@@ -114,6 +123,7 @@ public class Player extends Entity {
         }
         if (mana <= 0) {
             ismanaconsume = false;
+            ResetSpeed();
         }
     }
 
@@ -123,7 +133,7 @@ public class Player extends Entity {
             timeheal += 0.25;
             if (timeheal == timetoheal) {
                 timeheal = 0;
-                mana += manacons;
+                mana += manaheal;
                 if (mana >= maxmana) {
                     mana = 2000;
                 }
@@ -219,5 +229,8 @@ public class Player extends Entity {
     }
     public void setcantakedame(boolean a) {
         this.cantakedame = a;
+    }
+    public double getSpeed() {
+        return this.speed;
     }
 }

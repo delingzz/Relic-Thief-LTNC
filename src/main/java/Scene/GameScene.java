@@ -181,10 +181,30 @@ public class GameScene {
 
         Scene scene = new Scene(root, SCREENWIDTH, SCREENHEIGHT);
 
+        Hotbar();
+        createStatusBar();
+        setSelectionframe();
+
         input inputHandler = new input();
         scene.setOnKeyPressed(event -> {
             inputHandler.handleKeyPressed(event);
-            updateSelectionFrame();
+
+            switch (event.getCode()) {
+                case DIGIT1 -> select = 1;
+                case DIGIT2 -> select = 2;
+                case DIGIT3 -> select = 3;
+                case DIGIT4 -> select = 4;
+                case DIGIT5 -> select = 5;
+                case ENTER -> {
+                    manager.use();
+                }
+
+                default -> {
+                }
+            }
+            manager.setSelect(select);
+            selectionframe.setLayoutX(270 + select * 60);
+            selectionframe.toFront();
         });
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
         if (manager == null) {
@@ -195,9 +215,6 @@ public class GameScene {
             manager.setGameScene(this);
             manager.continuegame2();
         }
-        Hotbar();
-        setSelectionframe();
-        createStatusBar();
         stage.setScene(scene);
     }
     public void update(Player player) {
@@ -277,24 +294,5 @@ public class GameScene {
         selectionframe.setLayoutX(270 + select * 60);
         selectionframe.setLayoutY(644);
         UiPane.getChildren().add(selectionframe);
-    }
-    private void updateSelectionFrame() {
-
-        if (input.s1) {
-            select = 1;
-        }
-        else if (input.s2) {
-            select = 2;
-        }
-        else if (input.s3) {
-            select = 3;
-        }
-        else if (input.s4) {
-            select = 4;
-        }
-        else if (input.s5) {
-            select = 5;
-        }
-        selectionframe.setLayoutX(270 + select * 60);
     }
 }

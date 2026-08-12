@@ -30,6 +30,12 @@ public class Bom extends Item {
     private double animationTimer = 0;
     // bán kính bom nổ
     private double blastradius = 100;
+    private boolean hasDamaged = false;
+
+    private double timer = 0;
+    private final double exploretime = 3.0;
+    private boolean exploded = false;
+
     //mảng để lưu vị trí có thể chọn để spawn bom
 
     public Bom() {
@@ -56,6 +62,9 @@ public class Bom extends Item {
         isbom = true;
     }
     public void dame(Entity entity) {
+        if(hasDamaged == false) {
+            return;
+        }
         double deltaX = Bx - entity.getX();
         double deltaY = By - entity.getY();
         if(sqrt(deltaX*deltaX + deltaY*deltaY) <= R) {
@@ -66,6 +75,7 @@ public class Bom extends Item {
                 bot.setstun(true);
             }
         }
+        hasDamaged = true;
     }
     public void destroy(TileMap map) {
 
@@ -87,7 +97,8 @@ public class Bom extends Item {
                 double dy = By - centerY;
 
                 if (dx * dx + dy * dy <= blastradius * blastradius) {
-                    if (map.getTile(row, col) == 2) {
+                    if (map.getTile(row, col) == 4) {
+                        map.changeTile(row,col,0);
                         map.setTile(row, col, 0);
                     }
                 }
@@ -100,14 +111,14 @@ public class Bom extends Item {
         sprite.setLayoutX(P.x * TileMap.tileSize);
         sprite.setLayoutY(P.y * TileMap.tileSize);
     }
-    public void update(Player player,ArrayList<Bot> bots, TileMap map) {
-        if(input.enter) {
-            plant(player);
-            input.enter = false;
-        }
+    public void update(Player player, ArrayList<Bot> bots, TileMap map, double dt) {
+        timer += dt;
         animation();
-        dame(player);
-        destroy(map);
+        if (timer >= exploretime && !exploded) {
+            exploded = true;
+            dame(player);
+            destroy(map);
+        }
     }
     public void animation() {
         animationTimer += 0.0167;
@@ -130,5 +141,7 @@ public class Bom extends Item {
     public void update() {
         animation();
     }
-
+    public void setExploded(boolean a) {
+        this.exploded = a;
+    }
 }

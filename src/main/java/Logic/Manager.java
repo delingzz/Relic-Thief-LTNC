@@ -57,7 +57,7 @@ public class Manager {
 
     private GameState state = GameState.PAUSE;
     ArrayList<Point> possible = new ArrayList<>();
-    private double spawntime = 5;
+    private double spawntime = 2;
 
     private GameScene gamescene;
 
@@ -106,7 +106,7 @@ public class Manager {
             b.update(player);
         }
         for (Bom m : bom) {
-            m.update(player, bot, map);
+            m.update(player, bot, map,dt);
         }
         for (Item item : items) {
             if (item instanceof Food food) {
@@ -122,14 +122,23 @@ public class Manager {
                 relic.update();
             }
         }
-        select();
+        if(pressed == true) {
+            use();
+        }
         gamescene.update(player);
-        opendoor();
+
+        Iterator<Bom> bomIt = bom.iterator();
+        while (bomIt.hasNext()) {
+            Bom m = bomIt.next();
+            m.update(player, bot, map, dt);
+        }
+
         win();
+        resetspeed();
         spawntime -= dt;
         if (spawntime <= 0) {
             randomSpawn(map);
-            spawntime = 10;
+            spawntime = 2;
         }
         camera.update(player);
         gamePane.setLayoutX(-camera.getCameraX());
@@ -178,7 +187,6 @@ public class Manager {
                 double dt = (now - lastTime) / 1_000_000_000.0;
                 lastTime = now;
                 if (input.esc) {
-                    System.out.println("ESC NHAN");
                 }
                 dt = Math.min(dt, 0.05);
                 update(dt);
@@ -278,7 +286,6 @@ public class Manager {
                 numberbom++;
                 Bom b = new Bom();
                 b.setPosition(p);
-                System.out.println(numberbom);
                 bom.add(b);
                 items.add(b);
                 gamePane.getChildren().add(b.getSprite());
@@ -287,7 +294,6 @@ public class Manager {
                 numberfood++;
                 Food f = new Food();
                 f.setPosition(p);
-                System.out.println(numberfood);
                 items.add(f);
                 gamePane.getChildren().add(f.getSprite());
                 break;
@@ -295,7 +301,6 @@ public class Manager {
                 numberspeed++;
                 Speed s = new Speed();
                 s.setPosition(p);
-                System.out.println(numberspeed);
                 items.add(s);
                 gamePane.getChildren().add(s.getSprite());
                 break;
@@ -387,56 +392,76 @@ public class Manager {
         if(!inventory.havekey()) {
             return;
         }
-        if(select ==4 && input.enter) {
             double distancex = player.getX() - (map.doorpoint.x*36 +18);
             double distancey = player.getY() - (map.doorpoint.y*36 +18);
             double distance = sqrt(distancex*distancex + distancey*distancey);
 
             if(distance < player.hitbox +18) {
                 map.changeTile(map.doorpoint.y, map.doorpoint.x, 0);
-            }
-        }
-    }
-    public void select() {
-        if(input.s2) {
-            select = 1;
-            if(numberbom >=1 && input.enter && select ==1) {
-                numberbom--;
-                Bom b = new Bom();
-                b.plant(player);
-                b.dame(player);
-                for(Bot b1 : bot) {
-                    b.dame(b1);
-                }
-                b.destroy(map);
 
-            }
         }
-        else if(input.s2) {
-            select =2 ;
-            if(numberfood >=1 && input.enter && select == 2) {
-                player.heal(40);
-            }
-        }
-        else if(input.s3) {
-            select = 3;
-            if(numberspeed >=1 && input.enter && select ==3) {
-                speedup();
-            }
-        }
-        else if(input.s4) {
-            select = 4;
+
+    }
+    private boolean pressed = false;
+    private double bomtime = 3;
+    public void use() {
+        pressed = true;
+        switch (select) {
+            case 0:
+                return;
+            case 1:
+                if (inventory.dembom()) {
+                    Bom b = new Bom();
+                    b.plant(player);
+                    bom.add(b);
+                    inventory.remove(b);
+                }
+                pressed = false;
+                break;
+
+            case 3:
+                if (inventory.demfood()) {
+                    Food f = new Food();
+                    player.heal(40);
+                    inventory.remove(f);
+                    System.out.println(select);
+                    System.out.println("da dung food");
+                }
+                pressed = false;
+                break;
+
+            case 4:
+                if (inventory.demspeed()) {
+                    Speed s = new Speed();
+                    speeduptime = 5;
+                    player.SpeedUp(20);
+                    inventory.remove(s);
+                    System.out.println(select);
+                    System.out.println("da dung speed");
+                    System.out.println(player.getSpeed());
+                }
+                pressed = false;
+                break;
+
+            case 2:
+                opendoor();
+                pressed = false;
+                System.out.println(select);
+                break;
+
         }
     }
 
     private double speeduptime =5;
-    public void speedup() {
+    public void resetspeed() {
         if(speeduptime >=0) {
             speeduptime -= 0.0167;
-            player.SpeedUp(20);
         }
         else if(speeduptime <0) {
             player.ResetSpeed();
         }
+    }
+    public void setSelect(int select) {
+        this.select = select;
     }
 }
