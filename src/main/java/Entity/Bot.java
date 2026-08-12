@@ -105,7 +105,6 @@ public class Bot extends Entity {
             y = nextY;
             moved = true;
         }
-
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (deltaX > 0) {
                 direction = Direction.RIGHT;
