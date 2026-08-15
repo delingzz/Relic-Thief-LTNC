@@ -1,6 +1,7 @@
 package Scene;
 
 import Event.HoverEffect;
+import Event.SoundManager;
 import Logic.GameSession;
 import Logic.Manager;
 import javafx.fxml.FXML;
@@ -24,11 +25,13 @@ public class StartController {
             GameSession.clear();
             GameScene gameScene = new GameScene(menu.getStage());
             gameScene.show();
+            SoundManager.stopBGM();
         });
         continu.setOnMouseClicked(event -> {
             Manager manager = GameSession.getSavedGame();
             GameScene gameScene = new GameScene(menu.getStage(), manager);
             gameScene.show();
+            SoundManager.stopBGM();
         });
 
         HoverEffect.addHoverEffect(continu);

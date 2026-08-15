@@ -6,16 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane
-        maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity"
-        minWidth="-Infinity"
-        prefHeight="400.0"
-        prefWidth="400.0"
-        xmlns="http://javafx.com/javafx/21"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="Scene.SettingScene">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Scene.SettingController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -24,8 +15,8 @@
       </ImageView>
       <VBox layoutX="179.0" layoutY="100.0" prefHeight="220.0" prefWidth="140.0" spacing="50.0">
          <children>
-            <Slider />
-            <Slider />
+            <Slider fx:id="EffectSlider" />
+            <Slider fx:id="SoundSlider" />
          </children>
       </VBox>
       <ImageView fx:id="exitButton" fitHeight="40.0" fitWidth="100.0" layoutX="150.0" layoutY="280.0" onMouseClicked="#handleExit" onMouseEntered="#handleExitHover" onMouseExited="#handleExitUnhover" pickOnBounds="true" preserveRatio="true">

@@ -1,5 +1,6 @@
 package Entity;
 
+import Event.SoundManager;
 import Scene.TileMap;
 
 import javafx.animation.AnimationTimer;
@@ -12,11 +13,15 @@ import static java.lang.Math.sqrt;
 
 public class Bot extends Entity {
 
+    private Image movingimage;
+    private Image attackimage;
+
     //set tầm nhìn cho bot
     private double visible = 200;
     private double attackspace = 40;
     private double damage = 40;
     private double attacktimer = 0;
+
     private double timetoattack = 0.5;
     private double maxdistance = 100;
     private double k = 0.5;//set tạm thế
@@ -42,6 +47,8 @@ public class Bot extends Entity {
 
     private int frame = 0;
 
+    private boolean attack = false;
+
     public Bot(double Sx,double Sy,TileMap map) {
         super(2000, 1.5);
 
@@ -50,11 +57,11 @@ public class Bot extends Entity {
         this.x = Sx;
         this.y = Sy;
         this.map= map;
-        sprite = new ImageView(
-                new Image(
-                        getClass().getResource("/image/BotMoving.png").toExternalForm()
-                )
-        );
+        movingimage = new Image(getClass().getResource("/image/BotMoving.png").toExternalForm());
+        attackimage = new Image(getClass().getResource("/image/BotAttack.png").toExternalForm());
+
+        // Mặc định lúc sinh ra là dùng ảnh di chuyển
+        sprite = new ImageView(movingimage);
         sprite.setFitWidth(92);
         sprite.setFitHeight(72);
         sprite.setLayoutX(x-(60-36)/2.0);
@@ -71,6 +78,7 @@ public class Bot extends Entity {
     }
 
     public void attack(Player player) {
+        attack = true;
         attacktimer += deltatime;
         if (attacktimer >= timetoattack) {
             player.takedame(this.damage);
@@ -197,7 +205,7 @@ public class Bot extends Entity {
     }
 
     public void animation() {
-        if(moving){
+        if(moving && !attack){
             animationTimer += 0.0167;
             if(animationTimer >= 0.15){
                 frame = (frame + 1) % 4;
@@ -205,17 +213,36 @@ public class Bot extends Entity {
             }
 
         }
+        else if(attack) {
+            animationTimer += 0.0167;
+            if(animationTimer >= 0.15){
+                frame = (frame + 1);
+                animationTimer = 0;
+                if(frame == 2) {
+                    SoundManager.playSFX("/Sound/Punch.mp3");
+                }
+                if(frame ==3) {
+                    frame = 0;
+                    attack = false;
+                }
+            }
+        }
         else {
             frame =0;
         }
-        sprite.setViewport(
-                new Rectangle2D(
-                        frame * 148,
-                        k * 105,
-                        148,
-                        105
-                )
-        );
+        if(attack) {
+            if (sprite.getImage() != attackimage) {
+                sprite.setImage(attackimage);
+                frame = 0;
+            }
+            sprite.setViewport(new Rectangle2D(frame *384,k*245,384,245));
+        }
+        else {
+            if (sprite.getImage() != movingimage) {
+                sprite.setImage(movingimage);
+            }
+            sprite.setViewport(new Rectangle2D(frame *148,k*105,148,105));
+        }
     }
     public ImageView getSprite() {
         return sprite;

@@ -1,6 +1,7 @@
 package Scene;
 
 import Event.HoverEffect;
+import Event.SoundManager;
 import Logic.GameSession;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -48,9 +49,9 @@ public class mainmenu {
             StartController = start.getController();
             StartController.setMainmenu(this);
             StartPane.setVisible(false);
-            StackPane.setAlignment(StartPane, Pos.TOP_LEFT);
-            StartPane.setTranslateX((SCREENWIDTH - 400) / 2.0);
-            StartPane.setTranslateY((SCREENHEIGHT - 300) / 2.0);
+            StackPane.setAlignment(StartPane, Pos.CENTER);
+            StartPane.setTranslateX(0);
+            StartPane.setTranslateY(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,6 +71,7 @@ public class mainmenu {
                 StartPane.setVisible(true);
             }
             else {
+                SoundManager.stopBGM();
                 GameScene gamescene = new GameScene(stage);
                 gamescene.show();
             }
@@ -103,7 +105,7 @@ public class mainmenu {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene/Setting.fxml"));
             setting = loader.load();
             setting.setVisible(false);
-            SettingScene controller = loader.getController();
+            SettingController controller = loader.getController();
             controller.setOnBack(() -> {
                 setting.setVisible(false);
             });
@@ -117,6 +119,7 @@ public class mainmenu {
         OptImgV.setOnMouseClicked(e -> {
             setting.setVisible(true);
         });
+        SoundManager.playBGM("/Sound/MainMenu.mp3");
         root.getChildren().addAll(menup,setting,StartPane);
         Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
         stage.setScene(scene);

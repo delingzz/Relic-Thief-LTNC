@@ -166,6 +166,7 @@ public class Manager {
         }
         if (player.getHP() <= 0) {
             state = GameState.LOSE;
+            lose();
         }
     }
 
@@ -335,7 +336,9 @@ public class Manager {
     public Inventory getInventory() {
         return inventory;
     }
-
+    public void lose() {
+        gamescene.gamelose();
+    }
     public void pause() {
         if(state == GameState.RUNNING) {
             gamescene.showgamepause();
@@ -350,8 +353,11 @@ public class Manager {
         lastTime = 0;
         state = GameState.RUNNING;
     }
-    public void exit() {
+    public void stop() {
         GameSession.save(this);
+        state = GameState.PAUSE;
+    }
+    public void exit() {
         state = GameState.PAUSE;
     }
     public void setGamePane(Pane gamePane) {
@@ -373,6 +379,9 @@ public class Manager {
         state = GameState.RUNNING;
     }
     public void win() {
+        if(state == GameState.WIN ) {
+            return;
+        }
         if(inventory.haverelic() == false) {
             return;
         }
@@ -383,6 +392,7 @@ public class Manager {
         if(distance < player.hitbox +18) {
             map.changeTile(map.endpoint.y, map.endpoint.x, 0);
             state = GameState.WIN;
+            gamescene.gamewin();
         }
     }
     public void opendoor() {
@@ -403,7 +413,6 @@ public class Manager {
 
     }
     private boolean pressed = false;
-    private double bomtime = 3;
     public void use() {
         pressed = true;
         switch (select) {
@@ -414,7 +423,7 @@ public class Manager {
                     Bom b = new Bom();
                     b.plant(player);
                     bom.add(b);
-                    inventory.remove(b);
+                    //inventory.remove(b);
                 }
                 pressed = false;
                 break;

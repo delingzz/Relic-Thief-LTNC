@@ -4,6 +4,7 @@ module RelicThief {
     requires javafx.fxml;
     requires java.desktop;
     requires javafx.graphics;
+    requires javafx.media;
     opens Scene to javafx.fxml;
 
     exports Application;

@@ -3,6 +3,7 @@ package Item;
 import Entity.Entity;
 import Entity.Player;
 import Entity.Bot;
+import Event.SoundManager;
 import Event.input;
 import Scene.TileMap;
 import javafx.geometry.Rectangle2D;
@@ -35,6 +36,7 @@ public class Bom extends Item {
     private double timer = 0;
     private final double exploretime = 3.0;
     private boolean exploded = false;
+    private double bomsoundtimer = 0.15;
 
     //mảng để lưu vị trí có thể chọn để spawn bom
 
@@ -60,6 +62,7 @@ public class Bom extends Item {
         this.Bx = player.getX();
         this.By = player.getY();
         isbom = true;
+        timer = 0;
     }
     public void dame(Entity entity) {
         if(hasDamaged == false) {
@@ -114,11 +117,16 @@ public class Bom extends Item {
     public void update(Player player, ArrayList<Bot> bots, TileMap map, double dt) {
         timer += dt;
         animation();
+        if (!isbom) {
+            return;
+        }
         if (timer >= exploretime && !exploded) {
+            SoundManager.playSFX("/Sound/BomExplore.mp3");
             exploded = true;
             dame(player);
             destroy(map);
         }
+
     }
     public void animation() {
         animationTimer += 0.0167;

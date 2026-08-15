@@ -1,6 +1,7 @@
 package Item;
 
 import Entity.Player;
+import Event.SoundManager;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Inventory {
 
     //hàm thêm item
     public void add(Item item) {
+        SoundManager.playSFX("/Sound/Loot.mp3");
         inventory.add(item);
         if(item instanceof Bom) {
             bomcount++;

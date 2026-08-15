@@ -32,8 +32,8 @@
             </ImageView>
          </children>
       </VBox>
-      <Slider layoutX="355.0" layoutY="203.0" orientation="VERTICAL" />
-      <Slider layoutX="445.0" layoutY="149.0" orientation="VERTICAL" />
+      <Slider fx:id="EffectSlider" layoutX="355.0" layoutY="203.0" orientation="VERTICAL" />
+      <Slider fx:id="SoundSlider" layoutX="445.0" layoutY="149.0" orientation="VERTICAL" />
       <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="319.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/effecttext.png" />

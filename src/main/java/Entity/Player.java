@@ -2,6 +2,7 @@ package Entity;
 
 import Event.input;
 import Scene.TileMap;
+import Event.SoundManager;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -17,6 +18,8 @@ public class Player extends Entity {
     private double maxmana = 2000;
     private double oldspeed ;
     private int maxhp;
+
+    private double steptimer = 0.4;
 
     //set up cho tiêu hao Mana;
     private double manaTimer = 0;
@@ -40,7 +43,7 @@ public class Player extends Entity {
     private boolean cantakedame = false;
 
     public Player() {
-        super(100, 10.0);
+        super(100000, 5.0);
         x=3*36;
         y=5* 36;
         this.maxhp = 100;
@@ -58,6 +61,16 @@ public class Player extends Entity {
 
     public void update(TileMap map) {
         move(map);
+        if(moving) {
+            steptimer -= deltatime;
+            if(steptimer <=0) {
+                SoundManager.playSFX("/Sound/PlayerWalk.mp3");
+                steptimer = 0.4;
+            }
+        }
+        else {
+            steptimer = 0;
+        }
         healmana();
         manacost();
         animation();
@@ -85,9 +98,7 @@ public class Player extends Entity {
 
     //cơ chế trừ máu
     public void takedame(double damage) {
-        System.out.println("DAMAGE!!! " + damage + " | HP = " + hp);
         if (damage > 1000) {
-            System.out.println("INVALID DAMAGE = " + damage);
             Thread.dumpStack();
             return;
         }

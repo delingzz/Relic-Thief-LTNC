@@ -114,12 +114,9 @@ public class TileMap {
                         image = ground;
                         break;
                 }
-
                 if (image != null) {
                     ImageView tile = makeTile(image, x, y);
-
                     tileViews[row][col] = tile;
-
                     pane.getChildren().add(tile);
                 }
             }

@@ -26,6 +26,8 @@ public class GameScene {
     private Manager manager;
     private GameSession savegame;
     private Parent setting;
+    private Parent lose;
+    private Parent win;
 
     private ImageView bomicon;
     private ImageView foodicon;
@@ -165,6 +167,27 @@ public class GameScene {
             FXMLLoader pause = new FXMLLoader(
                     getClass().getResource("/Scene/GamePause.fxml")
             );
+            FXMLLoader loader2 = new FXMLLoader(
+                    getClass().getResource("/Scene/GameLose.fxml")
+            );
+            FXMLLoader loader3 = new FXMLLoader(
+                    getClass().getResource("/Scene/GameWin.fxml")
+            );
+
+            win = loader3.load();
+            GameWin controller = loader3.getController();
+            controller.setGamescene(this);
+            win.setVisible(false);
+            win.setLayoutX((SCREENWIDTH-500)/2);
+            win.setLayoutY((SCREENHEIGHT-400)/2);
+
+            lose = loader2.load();
+            GameLose controller2 = loader2.getController();
+            controller2.setGameScene(this);
+            lose.setVisible(false);
+            lose.setLayoutX((SCREENWIDTH-500)/2);
+            lose.setLayoutY((SCREENHEIGHT-400)/2);
+
             PausePane = pause.load();
             pauseController = pause.getController();
             pauseController.setGameScene(this);
@@ -173,7 +196,7 @@ public class GameScene {
             PausePane.setLayoutY((SCREENHEIGHT-500)/2);
             PausePane.setVisible(false);
 
-            root.getChildren().addAll(setting,PausePane);
+            root.getChildren().addAll(setting,PausePane,lose,win);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -274,17 +297,33 @@ public class GameScene {
         manager.continuegame();
         hidegamepause();
     }
+    public void clear() {
+        GameSession.clear();
+    }
+
+    public void gamelose() {
+        lose.setVisible(true);
+    }
+    public void hidegamelose() {
+        lose.setVisible(false);
+    }
+
     public void restartgame() {
         GameSession.clear();
         manager.start();
         hidegamepause();
     }
-    public void exitgame() {
-        GameSession.save(manager);
-        manager.exit();
+    public void stopgame() {
+        manager.stop();
         mainmenu menu = new mainmenu(stage);
         menu.show();
     }
+    public void exitgame() {
+        GameSession.clear();
+        mainmenu menu = new mainmenu(stage);
+        menu.show();
+    }
+
     public void setSelectionframe() {
         selectionframe = new ImageView(new Image(getClass().getResource("/image/selectionframe.png").toExternalForm()));
 
@@ -294,5 +333,8 @@ public class GameScene {
         selectionframe.setLayoutX(270 + select * 60);
         selectionframe.setLayoutY(644);
         UiPane.getChildren().add(selectionframe);
+    }
+    public void gamewin() {
+        win.setVisible(true);
     }
 }
