@@ -6,6 +6,7 @@ import Entity.Bot;
 import Event.SoundManager;
 import Event.input;
 import Scene.TileMap;
+import Entity.BomExplore;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,6 +62,8 @@ public class Bom extends Item {
     public void plant(Player player) {
         this.Bx = player.getX();
         this.By = player.getY();
+        this.x = Bx;
+        this.y = By;
         isbom = true;
         timer = 0;
     }
@@ -121,12 +124,10 @@ public class Bom extends Item {
             return;
         }
         if (timer >= exploretime && !exploded) {
-            SoundManager.playSFX("/Sound/BomExplore.mp3");
             exploded = true;
             dame(player);
             destroy(map);
         }
-
     }
     public void animation() {
         animationTimer += 0.0167;
@@ -151,5 +152,11 @@ public class Bom extends Item {
     }
     public void setExploded(boolean a) {
         this.exploded = a;
+    }
+    public double getExploretime() {
+        return exploretime;
+    }
+    public boolean isExploded() {
+        return exploded;
     }
 }

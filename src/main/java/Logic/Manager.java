@@ -16,6 +16,7 @@ import Item.Food;
 import Item.Speed;
 import Event.input;
 import Entity.Portal;
+import Entity.BomExplore;
 
 
 import java.awt.*;
@@ -44,6 +45,7 @@ public class Manager {
     private TileMap map;
     private ArrayList<Item> items = new ArrayList<>();
     private ArrayList<Bom> bom = new ArrayList<>();
+    private ArrayList<BomExplore> exploreList = new ArrayList<>();
     private Inventory inventory = new Inventory();
     private AnimationTimer gameloop;
     private long lastTime = 0;
@@ -88,6 +90,7 @@ public class Manager {
         items.clear();
         bom.clear();
         inventory.clear();
+        exploreList.clear();
         score = 0;
     }
 
@@ -104,9 +107,6 @@ public class Manager {
         portal.update();
         for (Bot b : bot) {
             b.update(player);
-        }
-        for (Bom m : bom) {
-            m.update(player, bot, map,dt);
         }
         for (Item item : items) {
             if (item instanceof Food food) {
@@ -132,7 +132,18 @@ public class Manager {
             Bom m = bomIt.next();
             m.update(player, bot, map, dt);
         }
+        Iterator<BomExplore> exploreIt = exploreList.iterator();
 
+        while (exploreIt.hasNext()) {
+            BomExplore explore = exploreIt.next();
+
+            explore.animation(dt);
+
+            if (explore.isFinished()) {
+                gamePane.getChildren().remove(explore.getSprite());
+                exploreIt.remove();
+            }
+        }
         win();
         resetspeed();
         spawntime -= dt;
@@ -250,16 +261,12 @@ public class Manager {
     //ham random cac vat pham trong game de nguoi choi su dung
     public void randomSpawn(TileMap map) {
         a.clear();
-
         if (numberbom < 5)
             a.add(0);
-
         if (numberfood < 7)
             a.add(1);
-
         if (numberspeed < 7)
             a.add(2);
-
         if (a.isEmpty())
             return;
         possible.clear();
@@ -267,17 +274,14 @@ public class Manager {
             for (int j = 0; j < map.getCols(); j++) {
 
                 if (map.getTile(i, j) == 0) {
-                    possible.add(new Point(i, j));
+                    possible.add(new Point(j, i));
                 }
             }
         }
-        if (possible.isEmpty()) return;
-
         Point p = new Point();
         do {
             p = possible.get(random.nextInt(possible.size()));
         } while (hasItem(p.x, p.y));
-
         if (hasItem(p.x, p.y))
             return;
         Random random1 = new Random();
@@ -422,6 +426,14 @@ public class Manager {
                 if (inventory.dembom()) {
                     Bom b = new Bom();
                     b.plant(player);
+                    BomExplore b1 = new BomExplore(b);
+                    exploreList.add(b1);
+                    gamePane.getChildren().add(b1.getSprite());
+                    System.out.println(
+                            "Explore: " +
+                                    b1.getSprite().getLayoutX() + ", " +
+                                    b1.getSprite().getLayoutY()
+                    );
                     bom.add(b);
                     //inventory.remove(b);
                 }
