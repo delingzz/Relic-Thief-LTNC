@@ -1,6 +1,7 @@
-package Scene;
+package Scene.Controller;
 
 import Event.HoverEffect;
+import Scene.GameScene;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 

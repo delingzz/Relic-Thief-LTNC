@@ -3,10 +3,18 @@ package Entity;
 import Event.input;
 import Scene.TileMap;
 import Event.SoundManager;
+import Scene.Controller.Name;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import javafx.geometry.Rectangle2D;
 
@@ -42,21 +50,38 @@ public class Player extends Entity {
 
     private boolean cantakedame = false;
 
-    public Player() {
+    private String name;
+    private Text nameText;
+
+    public Player(String name) {
         super(100000, 5.0);
         x=3*36;
         y=5* 36;
         this.maxhp = 100;
         this.oldspeed = speed;
-        this.mana = mana;
-        this.maxmana = maxmana;
+        if(name == null) {
+            this.name = "Player";
+        }
+        else {
+            this.name = name;
+        }
         sprite = new ImageView(
                 new Image(getClass().getResource("/image/Player.png").toExternalForm())
         );
+        nameText = new Text(this.name);
+        nameText.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        nameText.setFill(Color.WHITE); // Màu chữ tên
+        nameText.setStroke(Color.BLACK); // Viền đen xung quanh chữ để dễ nhìn
+        nameText.setStrokeWidth(0.5);
         sprite.setViewport(new Rectangle2D(0,0,48,48));
         sprite.setFitWidth(48);
         sprite.setFitHeight(48);
 
+    }
+    private void updateNamePosition() {
+        double textWidth = nameText.getBoundsInLocal().getWidth();
+        nameText.setX(x + (48 - textWidth) / 2);
+        nameText.setY(y - 10);
     }
 
     public void update(TileMap map) {
@@ -195,12 +220,12 @@ public class Player extends Entity {
         if (map.canMove(nextX + offsetX, y + offsetY, hitbox, hitbox)) {
             x = nextX;
         }
-        if (map.canMove(x + offsetX, nextY + offsetY, hitbox, hitbox)) {
+        if (map.canMove(x + offsetX, nextY + offsetY , hitbox, hitbox)) {
             y = nextY;
         }
-
         sprite.setLayoutX(x);
         sprite.setLayoutY(y);
+        updateNamePosition();
     }
     public void animation() {
         if(moving){
@@ -243,5 +268,11 @@ public class Player extends Entity {
     }
     public double getSpeed() {
         return this.speed;
+    }
+    public Text getNameText() {
+        return nameText;
+    }
+    public String getName() {
+        return this.name;
     }
 }

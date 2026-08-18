@@ -14,9 +14,7 @@ public class Relic extends Item{
     private boolean haverelic = false;
     public Relic() {
         super(30);
-        sprite = new ImageView(
-                new Image(getClass().getResource("/image/Relic.png").toExternalForm())
-        );
+        sprite = new ImageView(new Image(getClass().getResource("/image/Relic.png").toExternalForm()));
         sprite.setViewport(new Rectangle2D(0,0,384,450));
         sprite.setPreserveRatio(false);
         sprite.setFitWidth(36);
@@ -37,14 +35,7 @@ public class Relic extends Item{
             frame = (frame + 1) % 4;
             animationTimer = 0;
         }
-        sprite.setViewport(
-                new Rectangle2D(
-                        frame * 384,
-                        0,
-                        384,
-                        450
-                )
-        );
+        sprite.setViewport(new Rectangle2D(frame * 384, 0, 384, 450));
     }
     public ImageView getSprite() {
         return sprite;

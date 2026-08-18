@@ -3,6 +3,9 @@ package Scene;
 import Entity.Player;
 import Logic.GameSession;
 import Logic.Manager;
+import Scene.Controller.GameLose;
+import Scene.Controller.GameWin;
+import Scene.Controller.Pause;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -44,19 +47,21 @@ public class GameScene {
     private static final double BAR_HEIGHT = 20;
 
     private Pane PausePane;
-    private PauseController pauseController;
+    private Pause pause;
 
     private ImageView selectionframe;
     private int select = 0;
+    private String name;
 
 
     public GameScene(Stage stage, Manager manager) {
         this.stage = stage;
         this.manager = manager;
     }
-    public GameScene(Stage stage) {
+    public GameScene(Stage stage,String name) {
         this.stage = stage;
         this.manager = null;
+        this.name = name;
     }
 
     public void Hotbar() {
@@ -189,11 +194,8 @@ public class GameScene {
             lose.setLayoutY((SCREENHEIGHT-400)/2);
 
             PausePane = pause.load();
-            pauseController = pause.getController();
-            pauseController.setGameScene(this);
-
-            PausePane.setLayoutX((SCREENWIDTH-600)/2);
-            PausePane.setLayoutY((SCREENHEIGHT-500)/2);
+            this.pause = pause.getController();
+            this.pause.setGameScene(this);
             PausePane.setVisible(false);
 
             root.getChildren().addAll(setting,PausePane,lose,win);
@@ -232,7 +234,7 @@ public class GameScene {
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
         if (manager == null) {
             manager = new Manager(stage, gamePane, this);
-            manager.start();
+            manager.start(name);
         } else {
             manager.setGamePane(gamePane);
             manager.setGameScene(this);
@@ -310,7 +312,7 @@ public class GameScene {
 
     public void restartgame() {
         GameSession.clear();
-        manager.start();
+        manager.start(name);
         hidegamepause();
     }
     public void stopgame() {

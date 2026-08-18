@@ -12,4 +12,6 @@ module RelicThief {
     exports Logic;
     exports Entity;
     exports Item;
+    exports Scene.Controller;
+    opens Scene.Controller to javafx.fxml;
 }

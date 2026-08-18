@@ -16,11 +16,7 @@ public class Portal extends Entity {
         super(x,y);
         this.x = x;
         this.y = y;
-        sprite = new ImageView(
-                new Image(
-                        getClass().getResource("/image/Portal.png").toExternalForm()
-                )
-        );
+        sprite = new ImageView(new Image(getClass().getResource("/image/Portal.png").toExternalForm()));
         sprite.setFitWidth(62);
         sprite.setFitHeight(60);
         sprite.setLayoutX(x + tileSize / 2.0 - sprite.getFitWidth() / 2.0);
@@ -42,14 +38,7 @@ public class Portal extends Entity {
             frame = (frame + 1) % 4;
             animationTimer = 0;
         }
-        sprite.setViewport(
-                new Rectangle2D(
-                        frame * 384,
-                        0,
-                        384,
-                        594
-                )
-        );
+        sprite.setViewport(new Rectangle2D(frame * 384, 0, 384, 594));
     }
     public void update() {
         animation();

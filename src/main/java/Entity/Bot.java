@@ -15,6 +15,7 @@ public class Bot extends Entity {
 
     private Image movingimage;
     private Image attackimage;
+    private Image stunimage;
 
     //set tầm nhìn cho bot
     private double visible = 200;
@@ -59,6 +60,7 @@ public class Bot extends Entity {
         this.map= map;
         movingimage = new Image(getClass().getResource("/image/BotMoving.png").toExternalForm());
         attackimage = new Image(getClass().getResource("/image/BotAttack.png").toExternalForm());
+        stunimage = new Image(getClass().getResource("/image/BotStun.png").toExternalForm());
 
         // Mặc định lúc sinh ra là dùng ảnh di chuyển
         sprite = new ImageView(movingimage);
@@ -78,7 +80,7 @@ public class Bot extends Entity {
     }
 
     public void attack(Player player) {
-        attack = true;
+        attack = true;moving = true;
         attacktimer += deltatime;
         if (attacktimer >= timetoattack) {
             player.takedame(this.damage);
@@ -92,6 +94,7 @@ public class Bot extends Entity {
 
     //hàm di chuyển cho bot
     public void move(double X, double Y, TileMap map) {
+        attack = false;
         boolean moved = false;
         double deltaX = X - x;
         double deltaY = Y - y;
@@ -166,7 +169,10 @@ public class Bot extends Entity {
     }
     public void setstun(boolean stun) {
         this.isStun = stun;
-        System.out.println("stun");
+        if (stun) {
+            this.stuntimer = 5.0;
+            this.frame = 0;
+        }
     }
     public void update(Player player) {
         moving = false;
@@ -181,12 +187,15 @@ public class Bot extends Entity {
         double distance = sqrt((player.getX() - x) *(player.getX()-x) + (player.getY()-y)* (player.getY() - y));
         double disspawn = sqrt((Sx - x) *(Sx-x) + (Sy-y)* (Sy - y));
         if(isStun==true) {
+            attack = false;
+            moving = false;
             stuntimer -= deltatime;
             stun();
             if(stuntimer <=0) {
                 isStun = false;
                 speed = oldspeed;
             }
+            animation();
             return;
         }
         if(distance <= attackspace) {
@@ -205,13 +214,15 @@ public class Bot extends Entity {
     }
 
     public void animation() {
-        if(moving && !attack){
-            animationTimer += 0.0167;
-            if(animationTimer >= 0.15){
-                frame = (frame + 1) % 4;
+        if(isStun) {
+            animationTimer += deltatime;
+            if(animationTimer >= 0.15) {
+                frame = frame +1;
                 animationTimer = 0;
+                if(frame == 3) {
+                    frame = 0;
+                }
             }
-
         }
         else if(attack) {
             animationTimer += 0.0167;
@@ -227,17 +238,32 @@ public class Bot extends Entity {
                 }
             }
         }
+        else if(moving){
+            animationTimer += 0.0167;
+            if(animationTimer >= 0.15){
+                frame = (frame + 1) % 4;
+                animationTimer = 0;
+            }
+
+        }
         else {
             frame =0;
         }
-        if(attack) {
+        if(isStun) {
+            if(sprite.getImage() != stunimage) {
+                sprite.setImage(stunimage);
+                frame = 0;
+            }
+            sprite.setViewport(new Rectangle2D(frame*384,k*256,384,256));
+        }
+        else if(attack) {
             if (sprite.getImage() != attackimage) {
                 sprite.setImage(attackimage);
                 frame = 0;
             }
             sprite.setViewport(new Rectangle2D(frame *384,k*245,384,245));
         }
-        else {
+        else if(moving) {
             if (sprite.getImage() != movingimage) {
                 sprite.setImage(movingimage);
             }

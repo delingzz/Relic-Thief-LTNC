@@ -1,12 +1,14 @@
-package Scene;
+package Scene.Controller;
 
 import Event.HoverEffect;
 import Event.SoundManager;
+import Scene.GameScene;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Slider;
 
-public class PauseController {
+public class Pause {
     private GameScene gamescene;
     @FXML
     private ImageView restart;
@@ -16,9 +18,14 @@ public class PauseController {
     private ImageView exi;
     @FXML
     private Slider EffectSlider;
-
     @FXML
     private Slider SoundSlider;
+    @FXML
+    private Button clme;
+    @FXML
+    private Button ttmm;
+    @FXML
+    private Button ndcm;
 
     public void setGameScene(GameScene gameScene) {
         this.gamescene = gameScene;
@@ -34,6 +41,17 @@ public class PauseController {
         exi.setOnMouseClicked(event -> {
             gamescene.stopgame();
         });
+        clme.setOnAction(e-> {
+            SoundManager.playBGM("/Sound/ChamLanMoiEm.mp3");
+        });
+        ttmm.setOnAction(e-> {
+            SoundManager.playBGM("/Sound/TrangThaiMongMo.mp3");
+        });
+        ndcm.setOnAction(e-> {
+            SoundManager.playBGM("/Sound/NangDuoiChanMay.mp3");
+        });
+
+
         HoverEffect.addHoverEffect(exi);
         HoverEffect.addHoverEffect(cont);
         HoverEffect.addHoverEffect(restart);

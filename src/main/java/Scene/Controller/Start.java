@@ -1,13 +1,14 @@
-package Scene;
+package Scene.Controller;
 
 import Event.HoverEffect;
 import Event.SoundManager;
 import Logic.GameSession;
 import Logic.Manager;
-import javafx.fxml.FXML;
+import Scene.GameScene;
+import Scene.mainmenu;
 import javafx.scene.image.ImageView;
 
-public class StartController {
+public class Start {
     private GameScene gamescene;
     public ImageView restart;
     public ImageView continu;
@@ -23,8 +24,7 @@ public class StartController {
     public void initialize() {
         restart.setOnMouseClicked(event -> {
             GameSession.clear();
-            GameScene gameScene = new GameScene(menu.getStage());
-            gameScene.show();
+            menu.showSetName();
             SoundManager.stopBGM();
         });
         continu.setOnMouseClicked(event -> {

@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Scene.PauseController">
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Scene.Controller.Pause">
    <children>
-      <ImageView fitHeight="500.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="720.0" layoutX="-7.0" layoutY="-14.0" opacity="0.6" stroke="BLACK" strokeType="INSIDE" width="1080.0" />
+      <VBox layoutX="559.0" layoutY="271.0" prefHeight="200.0" prefWidth="500.0">
+         <children>
+            <Button fx:id="clme" mnemonicParsing="false" prefHeight="50.0" prefWidth="500.0" text="Cham Lan Moi Em " />
+            <Button fx:id="ttmm" mnemonicParsing="false" prefHeight="50.0" prefWidth="500.0" text="Trang Thai Mong Mo" />
+            <Button fx:id="ndcm" mnemonicParsing="false" prefHeight="50.0" prefWidth="500.0" text="Nang Duoi Chan May" />
+         </children>
+      </VBox>
+      <ImageView fitHeight="375.0" fitWidth="500.0" layoutX="33.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/PauseBg.png" />
          </image>
       </ImageView>
-      <VBox layoutX="72.0" layoutY="122.0" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+      <VBox layoutX="118.0" layoutY="271.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
          <children>
-            <ImageView fx:id="restart" fitHeight="150.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../image/Restart.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="cont" fitHeight="150.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../image/Continue.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="exi" fitHeight="150.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="exi" fitHeight="100.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/exitbutton.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="restart" fitHeight="150.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Restart.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="cont" fitHeight="150.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Continue.png" />
+               </image>
+            </ImageView>
          </children>
       </VBox>
-      <Slider fx:id="EffectSlider" layoutX="355.0" layoutY="203.0" orientation="VERTICAL" />
-      <Slider fx:id="SoundSlider" layoutX="445.0" layoutY="149.0" orientation="VERTICAL" />
-      <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="319.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
+      <Slider fx:id="EffectSlider" layoutX="340.0" layoutY="301.0" orientation="VERTICAL" />
+      <Slider fx:id="SoundSlider" layoutX="414.0" layoutY="265.0" orientation="VERTICAL" />
+      <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="314.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/effecttext.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="402.0" layoutY="302.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="381.0" layoutY="419.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/soundtext.png" />
          </image>

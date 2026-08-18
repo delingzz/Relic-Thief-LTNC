@@ -41,14 +41,7 @@ public class Key extends Item{
             frame = (frame + 1) % 4;
             animationTimer = 0;
         }
-        sprite.setViewport(
-                new Rectangle2D(
-                        frame * 274,
-                        0,
-                        274,
-                        277
-                )
-        );
+        sprite.setViewport(new Rectangle2D(frame * 274, 0, 274, 277));
     }
     public ImageView getSprite() {
         return sprite;

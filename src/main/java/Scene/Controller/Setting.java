@@ -1,4 +1,4 @@
-package Scene;
+package Scene.Controller;
 
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import Event.SoundManager;
 
-public class SettingController {
+public class Setting {
 
     @FXML
     private ImageView exitButton;
@@ -52,24 +52,17 @@ public class SettingController {
         }
     }
     public void initialize() {
-
         // Hiển thị volume hiện tại
         SoundSlider.setValue(SoundManager.getBGMVolume() * 100);
         EffectSlider.setValue(SoundManager.getSFXVolume() * 100);
-
         // Volume nhạc nền
         SoundSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-
             double volume = newValue.doubleValue() / 100.0;
-
             SoundManager.setBGMVolume(volume);
         });
-
         // Volume hiệu ứng
         EffectSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-
             double volume = newValue.doubleValue() / 100.0;
-
             SoundManager.setSFXVolume(volume);
         });
     }

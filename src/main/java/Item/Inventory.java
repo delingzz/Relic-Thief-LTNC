@@ -74,6 +74,7 @@ public class Inventory {
             }
         }
     }
+    //clear toan bo set lai tu dau game
     public void clear() {
         bomcount = 0;
         speedcount =0;
@@ -84,19 +85,22 @@ public class Inventory {
     }
     public ArrayList<Item> getItems() {
         return inventory;
-    }
+    }    //ham tra ve item trong inventory
     public ArrayList<Item> getHotbar() {
         return hotbar;
-    }
+    }    // ham tra ve cac item co trong hotbar
+
     public void sethavekey(boolean key) {
         this.havekey = key;
-    }
+    }   //set co key khi nhat duoc key
+
     public boolean haverelic() {
         return haverelic;
-    }
+    }   //set co relic khi nhat duoc relic
     public boolean havekey() {
         return havekey;
-    }
+    }     // ham tra ve key de kiem tra xem co key hay chua
+
     public boolean dembom() {
         return bomcount >=1;
     }

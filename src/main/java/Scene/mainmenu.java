@@ -3,6 +3,9 @@ package Scene;
 import Event.HoverEffect;
 import Event.SoundManager;
 import Logic.GameSession;
+import Scene.Controller.Name;
+import Scene.Controller.Setting;
+import Scene.Controller.Start;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -20,13 +23,16 @@ import static Application.RelicThief.*;
 public class mainmenu {
 
     private Stage stage;
-    private Pane StartPane;
-    private StartController StartController;
+    private Pane startpane;
+    private Start Start;
 
     private ImageView backgr = new ImageView();
 
     // Settings
     private Parent setting;
+
+    private Pane namepane;      // Đã đổi tên biến tránh trùng tên class
+    private Name namecontroller;
 
     public mainmenu(Stage stage) {
         this.stage = stage;
@@ -41,17 +47,15 @@ public class mainmenu {
         backgr.setFitWidth(SCREENWIDTH);
         backgr.setFitHeight(SCREENHEIGHT);
         try {
-            FXMLLoader start = new FXMLLoader(
-                    getClass().getResource("/Scene/StartGame.fxml")
-            );
+            FXMLLoader start = new FXMLLoader(getClass().getResource("/Scene/StartGame.fxml"));
 
-            StartPane = start.load();
-            StartController = start.getController();
-            StartController.setMainmenu(this);
-            StartPane.setVisible(false);
-            StackPane.setAlignment(StartPane, Pos.CENTER);
-            StartPane.setTranslateX(0);
-            StartPane.setTranslateY(0);
+            startpane = start.load();
+            Start = start.getController();
+            Start.setMainmenu(this);
+            startpane.setVisible(false);
+            StackPane.setAlignment(startpane, Pos.CENTER);
+            startpane.setTranslateX(0);
+            startpane.setTranslateY(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,20 +72,14 @@ public class mainmenu {
 
         StartImgV.setOnMouseClicked(e -> {
             if(GameSession.hasSavedGame()) {
-                StartPane.setVisible(true);
+                startpane.setVisible(true);
             }
             else {
-                SoundManager.stopBGM();
-                GameScene gamescene = new GameScene(stage);
-                gamescene.show();
+                namepane.setVisible(true);
             }
         });
 
-        Image OptImg = new Image(
-                Objects.requireNonNull(
-                        getClass().getResource("/image/Setting.png")
-                ).toExternalForm()
-        );
+        Image OptImg = new Image(Objects.requireNonNull(getClass().getResource("/image/Setting.png")).toExternalForm());
         ImageView OptImgV = new ImageView(OptImg);
         OptImgV.setFitHeight(BUTTONHEIGHT);
         OptImgV.setFitWidth(BUTTONWIDTH);
@@ -105,7 +103,7 @@ public class mainmenu {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene/Setting.fxml"));
             setting = loader.load();
             setting.setVisible(false);
-            SettingController controller = loader.getController();
+            Setting controller = loader.getController();
             controller.setOnBack(() -> {
                 setting.setVisible(false);
             });
@@ -115,17 +113,26 @@ public class mainmenu {
             e.printStackTrace();
 
         }
+        try {
+            FXMLLoader nameLoader = new FXMLLoader(getClass().getResource("/Scene/SetName.fxml"));
+            namepane = nameLoader.load();
+            namecontroller = nameLoader.getController();
+            namecontroller.setMenu(this); // Truyền instance mainmenu cho Controller Name
+            namepane.setVisible(false);
+            StackPane.setAlignment(namepane, Pos.CENTER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         OptImgV.setOnMouseClicked(e -> {
             setting.setVisible(true);
         });
         SoundManager.playBGM("/Sound/MainMenu.mp3");
-        root.getChildren().addAll(menup,setting,StartPane);
+        root.getChildren().addAll(menup,setting, startpane, namepane);
         Scene scene = new Scene(root,SCREENWIDTH,SCREENHEIGHT);
         stage.setScene(scene);
         stage.show();
     }
-
     public void hideSetting() {
         if (setting != null) {
             setting.setVisible(false);
@@ -133,5 +140,16 @@ public class mainmenu {
     }
     public Stage getStage() {
         return this.stage;
+    }
+    public void hidesetname() {
+        namepane.setVisible(false);
+    }
+    public void showSetName() {
+        namepane.setVisible(true);
+    }
+    public void start(String name) {
+        SoundManager.stopBGM();
+        GameScene gamescene = new GameScene(stage,name);
+        gamescene.show();
     }
 }
