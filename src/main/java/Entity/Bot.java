@@ -19,13 +19,16 @@ public class Bot extends Entity {
 
     //set tầm nhìn cho bot
     private double visible = 200;
+    //set tầm đánh
     private double attackspace = 40;
-    private double damage = 40;
+    private double damage = 30;
+    //set thời gian đấm 1 phát
     private double attacktimer = 0;
-
     private double timetoattack = 0.5;
+    //khoảng cách xa nhất mà bot đuổi ng
     private double maxdistance = 100;
-    private double k = 0.5;//set tạm thế
+    private double k;
+
     private int PatrolTimer = 0;
     private double Sx, Sy; // tọa độ spawn của bot
     private double deltatime = 0.0167;

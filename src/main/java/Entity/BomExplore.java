@@ -15,14 +15,16 @@ import static java.lang.Math.sqrt;
 public class BomExplore extends Entity {
     private int frame = 0;
     private int k = 0;
+    //thời gian để bom nổ
     private double timer = 0;
     private ImageView sprite;
     private Bom bom;
+    //kiem tra xem đã chạy hết sprite chưa để dừng chạy
     private boolean finished = false;
     private boolean soundPlayed = false;
+    //bán kính nổ
     private double R = 108;
     private double bomdame = 100;
-    private double blastradius = 100;
 
     public BomExplore(Bom bom) {
         super(1000,0);
@@ -106,9 +108,8 @@ public class BomExplore extends Entity {
                 double dx = x - centerX;
                 double dy = y - centerY;
 
-                if (dx * dx + dy * dy <= blastradius * blastradius) {
+                if (dx * dx + dy * dy <= R * R) {
                     if (map.getTile(row, col) == 4) {
-                        System.out.printf(col + " " + row);
                         map.changeTile(row,col,0);
                         map.setTile(row, col, 0);
                     }

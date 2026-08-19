@@ -6,6 +6,8 @@ import Logic.GameSession;
 import Scene.Controller.Name;
 import Scene.Controller.Setting;
 import Scene.Controller.Start;
+import Scene.Tutorial;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -21,10 +23,11 @@ import java.util.Objects;
 import static Application.RelicThief.*;
 
 public class mainmenu {
-
+    private Tutorial t;
     private Stage stage;
     private Pane startpane;
     private Start Start;
+    private boolean showplay = false;
 
     private ImageView backgr = new ImageView();
 
@@ -36,6 +39,7 @@ public class mainmenu {
 
     public mainmenu(Stage stage) {
         this.stage = stage;
+        this.t = new Tutorial(stage);
     }
 
     public void show() {
@@ -67,7 +71,7 @@ public class mainmenu {
         StartImgV.setFitWidth(BUTTONWIDTH);
         StartImgV.setPickOnBounds(false);
         StartImgV.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
-        StartImgV.setLayoutY(230);
+        StartImgV.setLayoutY(270);
         HoverEffect.addHoverEffect(StartImgV);
 
         StartImgV.setOnMouseClicked(e -> {
@@ -85,7 +89,7 @@ public class mainmenu {
         OptImgV.setFitWidth(BUTTONWIDTH);
         OptImgV.setPickOnBounds(false);
         OptImgV.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
-        OptImgV.setLayoutY(350);
+        OptImgV.setLayoutY(360);
         HoverEffect.addHoverEffect(OptImgV);
 
         Image TutorialImg = new Image(
@@ -96,8 +100,13 @@ public class mainmenu {
         TTImgV.setFitWidth(BUTTONWIDTH);
         TTImgV.setPickOnBounds(false);
         TTImgV.setLayoutX((SCREENWIDTH - BUTTONWIDTH) / 2);
-        TTImgV.setLayoutY(470);
+        TTImgV.setLayoutY(450);
         HoverEffect.addHoverEffect(TTImgV);
+
+        TTImgV.setOnMouseClicked(e-> {
+            t.show();
+        });
+
         menup.getChildren().addAll(backgr, StartImgV, OptImgV, TTImgV);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene/Setting.fxml"));

@@ -21,11 +21,11 @@ public class Pause {
     @FXML
     private Slider SoundSlider;
     @FXML
-    private Button clme;
+    private ImageView clme;
     @FXML
-    private Button ttmm;
+    private ImageView ttmm;
     @FXML
-    private Button ndcm;
+    private ImageView ndcm;
 
     public void setGameScene(GameScene gameScene) {
         this.gamescene = gameScene;
@@ -41,13 +41,13 @@ public class Pause {
         exi.setOnMouseClicked(event -> {
             gamescene.stopgame();
         });
-        clme.setOnAction(e-> {
+        clme.setOnMouseClicked(e-> {
             SoundManager.playBGM("/Sound/ChamLanMoiEm.mp3");
         });
-        ttmm.setOnAction(e-> {
+        ttmm.setOnMouseClicked(e-> {
             SoundManager.playBGM("/Sound/TrangThaiMongMo.mp3");
         });
-        ndcm.setOnAction(e-> {
+        ndcm.setOnMouseClicked(e-> {
             SoundManager.playBGM("/Sound/NangDuoiChanMay.mp3");
         });
 
@@ -55,6 +55,9 @@ public class Pause {
         HoverEffect.addHoverEffect(exi);
         HoverEffect.addHoverEffect(cont);
         HoverEffect.addHoverEffect(restart);
+        HoverEffect.addHoverEffect(ttmm);
+        HoverEffect.addHoverEffect(clme);
+        HoverEffect.addHoverEffect(ndcm);
         SoundSlider.setValue(SoundManager.getBGMVolume() * 100);
         EffectSlider.setValue(SoundManager.getSFXVolume() * 100);
         // Volume nhạc nền
