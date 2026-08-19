@@ -22,35 +22,36 @@ import static Application.RelicThief.SCREENWIDTH;
 import Item.Inventory;
 
 public class GameScene {
+    //stage cuar game
     private Stage stage;
     private Pane root = new Pane();
     private Pane gamePane = new Pane();
-    private Pane UiPane = new Pane();
+
     private Manager manager;
     private GameSession savegame;
+    //mấy cái để lưu các chức năng phụ
     private Parent setting;
     private Parent lose;
     private Parent win;
 
+    //Ui phụ trách hiển thị HP, icon ,bar
+    private Pane UiPane = new Pane();
     private ImageView bomicon;
     private ImageView foodicon;
     private ImageView speedicon;
     private ImageView keyicon;
-
     private Rectangle hpBackground;
     private Rectangle hpBar;
-
     private Rectangle manaBackground;
     private Rectangle manaBar;
-
     private static final double BAR_WIDTH = 220;
     private static final double BAR_HEIGHT = 20;
+    private ImageView selectionframe;
+    private int select = 0;
 
     private Pane PausePane;
     private Pause pause;
 
-    private ImageView selectionframe;
-    private int select = 0;
     private String name;
 
 
@@ -75,56 +76,33 @@ public class GameScene {
 
         bomicon.setFitWidth(40);
         bomicon.setFitHeight(40);
-        bomicon.setLayoutX(
-                280+60);
-
-        bomicon.setLayoutY(
-                654
-        );
+        bomicon.setLayoutX(280+60);
+        bomicon.setLayoutY(654);
 
         keyicon.setFitWidth(40);
         keyicon.setFitHeight(40);
-        keyicon.setLayoutX(
-                280+60*2
-        );
-
-        keyicon.setLayoutY(
-                654
-        );
+        keyicon.setLayoutX(280+60*2);
+        keyicon.setLayoutY(654);
 
         foodicon.setFitWidth(40);
         foodicon.setFitHeight(40);
-        foodicon.setLayoutX(
-               280+60*3
-        );
+        foodicon.setLayoutX(280+60*3);
 
-        foodicon.setLayoutY(
-                654
-        );
+        foodicon.setLayoutY(654);
 
         speedicon.setFitWidth(40);
         speedicon.setFitHeight(40);
-        speedicon.setLayoutX(
-               280+60*4
-        );
+        speedicon.setLayoutX(280+60*4);
 
-        speedicon.setLayoutY(
-                654
-        );
+        speedicon.setLayoutY(654);
 
         hotbar.setFitWidth(SCREENWIDTH / 2);
         hotbar.setFitHeight(SCREENHEIGHT / 10 -15);
-        hotbar.setLayoutX(
-                (SCREENWIDTH - hotbar.getFitWidth()) / 2
-        );
+        hotbar.setLayoutX((SCREENWIDTH - hotbar.getFitWidth()) / 2);
 
-        hotbar.setLayoutY(
-                SCREENHEIGHT - hotbar.getFitHeight() - 20
-        );
+        hotbar.setLayoutY(SCREENHEIGHT - hotbar.getFitHeight() - 20);
 
         UiPane.getChildren().addAll(hotbar,bomicon,speedicon,keyicon,foodicon);
-
-
     }
 
     private void createStatusBar() {
@@ -132,7 +110,6 @@ public class GameScene {
         hpBackground.setFill(Color.DARKGRAY);
         hpBar = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
         hpBar.setFill(Color.RED);
-
 
         manaBackground = new Rectangle(BAR_WIDTH, BAR_HEIGHT);
         manaBackground.setFill(Color.DARKGRAY);
@@ -149,16 +126,10 @@ public class GameScene {
         manaBar.setLayoutX(30);
         manaBar.setLayoutY(60);
 
-        UiPane.getChildren().addAll(
-                hpBackground,
-                hpBar,
-                manaBackground,
-                manaBar
-        );
+        UiPane.getChildren().addAll(hpBackground, hpBar, manaBackground, manaBar);
     }
     
     public void show() {
-
         root.getChildren().add(gamePane);
         root.getChildren().add(UiPane);
 
@@ -211,9 +182,10 @@ public class GameScene {
         setSelectionframe();
 
         input inputHandler = new input();
+
+        //set select cho manager để dùng item
         scene.setOnKeyPressed(event -> {
             inputHandler.handleKeyPressed(event);
-
             switch (event.getCode()) {
                 case DIGIT1 -> select = 1;
                 case DIGIT2 -> select = 2;
@@ -271,11 +243,9 @@ public class GameScene {
         }
 
 
-        double hpPercent =
-                player.getHP() / player.getMaxHP();
+        double hpPercent = player.getHP() / player.getMaxHP();
 
-        double manaPercent =
-                player.getMana() / player.getMaxMana();
+        double manaPercent = player.getMana() / player.getMaxMana();
 
         hpPercent = Math.max(0, Math.min(1, hpPercent));
         manaPercent = Math.max(0, Math.min(1, manaPercent));
