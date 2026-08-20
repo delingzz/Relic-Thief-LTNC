@@ -27,10 +27,8 @@ public class mainmenu {
     private Stage stage;
     private Pane startpane;
     private Start Start;
-    private boolean showplay = false;
 
     private ImageView backgr = new ImageView();
-
     // Settings
     private Parent setting;
 

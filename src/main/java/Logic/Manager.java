@@ -169,12 +169,6 @@ public class Manager {
             if (canloot(item, player)) {
                 inventory.add(item);
                 gamePane.getChildren().remove(item.getSprite());
-                if (item instanceof Bom)
-                    numberbom--;
-                else if (item instanceof Food)
-                    numberfood--;
-                else if (item instanceof Speed)
-                    numberspeed--;
                 it.remove();
             }
         }
@@ -204,10 +198,8 @@ public class Manager {
         if (gameloop != null) {
             gameloop.stop();
         }
-
         //clear tat ca tu dau
         clear();
-
         //khoi tao map
         int[][] original = ReadMap.loadMap("/map.txt");
         map = new TileMap(original);

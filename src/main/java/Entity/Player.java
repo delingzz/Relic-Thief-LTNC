@@ -118,10 +118,6 @@
 
         //cơ chế trừ máu
         public void takedame(double damage) {
-            if (damage > 1000) {
-                Thread.dumpStack();
-                return;
-            }
             if(cantakedame == true) {
                 this.hp -= damage;
                 if (this.hp <= 0) {
@@ -209,12 +205,15 @@
 
             double nextX = x + dx * speed;
             double nextY = y + dy * speed;
-            double offsetX = (48 - hitbox) / 2;
-            double offsetY = (48 - hitbox) / 2;
-            if (map.canMove(nextX + offsetX, y + offsetY, hitbox, hitbox)) {
+            double footWidth = 20;
+            double footHeight = 8;
+            double footOffsetX = (48 - footWidth) / 2;
+            double footOffsetY = 48 - footHeight;
+
+            if (map.canMove(nextX + footOffsetX, y + footOffsetY, footWidth, footHeight)) {
                 x = nextX;
             }
-            if (map.canMove(x + offsetX, nextY + offsetY , hitbox, hitbox)) {
+            if (map.canMove(x + footOffsetX, nextY + footOffsetY, footWidth, footHeight)) {
                 y = nextY;
             }
             sprite.setLayoutX(x);
@@ -232,14 +231,7 @@
             else {
                 frame =0;
             }
-            sprite.setViewport(
-                    new Rectangle2D(
-                            frame * 125,
-                            k * 125,
-                            125,
-                            125
-                    )
-            );
+            sprite.setViewport(new Rectangle2D(frame * 125, k * 125, 125, 125));
         }
         public ImageView getSprite() {
             return sprite;

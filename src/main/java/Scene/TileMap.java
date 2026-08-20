@@ -71,6 +71,12 @@ public class TileMap {
         if(map[row][col] ==1 || map[row][col]==4 || map[row][col]==3 || map[row][col]==9) {return true;}
         return false;
     }
+    public boolean canMove(double x, double y, double width, double height) {
+        return !isWall(x, y)
+                && !isWall(x + width - 1, y)
+                && !isWall(x, y + height - 1)
+                && !isWall(x + width - 1, y + height - 1);
+    }
 
     public void draw(Pane pane) {
 
@@ -134,16 +140,9 @@ public class TileMap {
 
         return tile;
     }
-    public boolean canMove(double x, double y, double width, double height) {
-        return !isWall(x, y)
-                && !isWall(x + width - 1, y)
-                && !isWall(x, y + height - 1)
-                && !isWall(x + width - 1, y + height - 1);
-    }
     public int getRows() {
         return map.length;
     }
-
     public int getCols() {
         return map[0].length;
     }
